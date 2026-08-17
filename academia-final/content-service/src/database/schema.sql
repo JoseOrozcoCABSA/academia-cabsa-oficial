@@ -1,0 +1,5 @@
+-- Catálogo del esquema vigente del servicio content-service.
+-- La definición ejecutable se mantiene en los modelos Sequelize y migraciones del servicio.
+-- contenido_capsulas
+-- contenido_material_educativo
+-- contenido_recursos

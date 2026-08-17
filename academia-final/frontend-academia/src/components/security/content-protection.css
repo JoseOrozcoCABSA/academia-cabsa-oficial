@@ -1,0 +1,47 @@
+.protected-learning-content main,
+.protected-learning-content .course-lesson-detail,
+.protected-learning-content .lesson-exam {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.protected-learning-content input,
+.protected-learning-content textarea,
+.protected-learning-content select,
+.protected-learning-content [contenteditable="true"],
+.protected-learning-content .allow-copy {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.lesson-exam-retry {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+  padding: 11px 16px;
+  border: 1px solid #921a1d;
+  border-radius: 9px;
+  background: #fff;
+  color: #921a1d;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.lesson-exam-retry svg { width: 18px; }
+
+.content-protection-badge {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 80;
+  padding: 7px 10px;
+  border: 1px solid #d9c38e;
+  border-radius: 999px;
+  background: #fffaf0e8;
+  color: #6f5516;
+  box-shadow: 0 5px 15px #2f210f18;
+  font-size: .68rem;
+  font-weight: 800;
+  pointer-events: none;
+}

@@ -1,0 +1,16 @@
+-- Catálogo del esquema vigente del servicio academia-service.
+-- La definición ejecutable se mantiene en los modelos Sequelize y migraciones del servicio.
+-- academia_cache
+-- academia_cache_bloqueos
+-- academia_certificados
+-- academia_cursos
+-- academia_foro_respuestas
+-- academia_foro_temas
+-- academia_foros
+-- academia_inscripciones
+-- academia_lecciones
+-- academia_lotes_trabajo
+-- academia_migraciones
+-- academia_progreso_lecciones
+-- academia_trabajos
+-- academia_trabajos_fallidos

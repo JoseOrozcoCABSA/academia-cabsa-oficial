@@ -1,0 +1,56 @@
+{
+  "name": "academia-content-service",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "check": "tsc --noEmit && tsc -p tsconfig.test.json",
+    "dev": "tsx server.ts",
+    "seed:mediateca": "tsx src/database/seeders/v5Mediateca.seeder.ts",
+    "start": "node dist/server.js",
+    "test": "tsx --test \"src/**/*.test.ts\"",
+    "test:watch": "tsx --test --watch \"src/**/*.test.ts\""
+  },
+  "imports": {
+    "#app": "./dist/app.js",
+    "#config/*": "./dist/src/config/*.js",
+    "#models": "./dist/src/models/index.js",
+    "#models/*": "./dist/src/models/*.js",
+    "#routes/*": "./dist/src/routes/*.js",
+    "#controllers/*": "./dist/src/controllers/*.js",
+    "#services/*": "./dist/src/services/*.js",
+    "#middlewares/*": "./dist/src/middlewares/*.js",
+    "#validators/*": "./dist/src/validators/*.js",
+    "#repositories/*": "./dist/src/repositories/*.js",
+    "#constants/*": "./dist/src/constants/*.js",
+    "#utils/*": "./dist/src/utils/*.js",
+    "#types/*": "./dist/src/types/*.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "file-type": "^22.0.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.2",
+    "mysql2": "^3.15.3",
+    "sequelize": "^6.37.7",
+    "sharp": "^0.35.3"
+  },
+  "overrides": {
+    "uuid": "11.1.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^24.10.1",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}

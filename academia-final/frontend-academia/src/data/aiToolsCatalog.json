@@ -1,0 +1,324 @@
+{
+    "assistant": {
+        "preescolar": {
+            "title": "Asistentes Virtuales de Preescolar",
+            "intro_image": "/assets/images/ai-tools/2025/07/72147ed3-58e5-4974-9cf9-c22c3dec5934-600x600.jpg",
+            "intro": [
+                "En <strong>Academia CABSA</strong> contamos con <strong>Asistentes Virtuales Inteligentes</strong> diseñados para fortalecer el aprendizaje y la enseñanza en los tres grados de preescolar. Cada asistente está especializado en el desarrollo cognitivo, socioemocional y motriz correspondiente a su nivel, brindando apoyo pedagógico y orientación educativa tanto en el aula como en el hogar.",
+                "Estos asistentes funcionan en <strong>colaboración con tecnologías avanzadas</strong> como <strong>OpenAI, Google Gemini y otras plataformas de inteligencia artificial</strong>, lo que garantiza que estén <strong>siempre actualizados con las últimas funciones y herramientas</strong>. Además, han sido <strong>entrenados por expertos educadores y alimentados con información oficial de la Secretaría de Educación Pública (SEP)</strong>, en coherencia con el <strong>Nuevo Modelo Educativo Mexicano (NEM)</strong>, asegurando pertinencia y alineación curricular.",
+                "El enfoque de los <strong>Asistentes Virtuales de Preescolar</strong> está dirigido principalmente a <strong>docentes y padres educadores</strong>, quienes utilizan estas herramientas para diseñar experiencias de aprendizaje más ricas, personalizadas y afectivas. Los asistentes ofrecen <strong>orientación pedagógica</strong>, <strong>recursos de apoyo didáctico</strong> y <strong>consejos prácticos para madres, padres y cuidadores</strong>, fortaleciendo el vínculo entre escuela y familia."
+            ],
+            "highlights": "<strong>Alineados</strong> con los libros oficiales de texto gratuito y el marco pedagógico de la SEP-NEM.<br>\n<strong>Actualizados continuamente</strong> mediante su integración con plataformas como OpenAI y Google Gemini.<br>\n<strong>Dirigidos a docentes y padres</strong>, como guías inteligentes para acompañar el desarrollo integral de los niños y niñas.<br>\n<strong>Entrenados por especialistas en educación infantil</strong>, garantizando una orientación sólida, segura y coherente con el contexto educativo nacional.",
+            "cards": [
+                {
+                    "level": "preescolar",
+                    "number": "1.º",
+                    "title": "Asistente de 1.º de Preescolar",
+                    "image": "/assets/images/ai-tools/2025/12/verdePre-300x233.png",
+                    "gpt_url": "https://chatgpt.com/g/g-697106fb26ec819192b8111da927fecf-asistente-virtual-docente-1o-preescolar",
+                    "gemini_url": "https://gemini.google.com/gem/1aYQm0vb_s1ksEuqnkWFVcxfrZPM7MPTl?usp=sharing",
+                    "description": "Guía en el descubrimiento de los primeros aprendizajes, con actividades sensoriales, juegos y dinámicas que despiertan la curiosidad natural de los pequeños."
+                },
+                {
+                    "level": "preescolar",
+                    "number": "2.º",
+                    "title": "Asistente de 2.º de Preescolar",
+                    "image": "/assets/images/ai-tools/2025/12/amarilloPre-300x233.png",
+                    "gpt_url": "https://chatgpt.com/g/g-697111b78abc8191bcfb1590dae65880-asistente-virtual-docente-2o-preescolar",
+                    "gemini_url": "https://gemini.google.com/gem/1rkvMorP2TXNwgQAOLiaL-DFhCbYTVTCU?usp=sharing",
+                    "description": "Acompaña el desarrollo de nuevas capacidades de comunicación, pensamiento lógico y creatividad, para consolidar la autonomía y la exploración del entorno."
+                },
+                {
+                    "level": "preescolar",
+                    "number": "3.º",
+                    "title": "Asistente de 3.º de Preescolar",
+                    "image": "/assets/images/ai-tools/2025/12/azul-300x233.png",
+                    "gpt_url": "https://chatgpt.com/g/g-697114982fd08191b83efbc20f038099-asistente-virtual-docente-3o-preescolar",
+                    "gemini_url": "https://gemini.google.com/gem/15h09Q482ucdzM-HmUH9Vshf1oWOzTfpt?usp=sharing",
+                    "description": "Prepara a los niños y niñas para la transición a primaria, reforzando habilidades como la atención, la expresión oral y la comprensión básica de conceptos matemáticos y de lectoescritura."
+                }
+            ],
+            "integrator": {
+                "level": "preescolar",
+                "number": null,
+                "title": "Asistente Integrador de Preescolar",
+                "image": "/assets/images/ai-tools/2025/11/ChatGPT-Image-24-nov-2025-12_12_46-768x768.png",
+                "gpt_url": "https://chatgpt.com/g/g-69949b78d0808191b46a5c80de740c50-asistente-preescolar-sin-recetas",
+                "gemini_url": "https://gemini.google.com/gem/1P3V9zKlvn7G9niHLCMogKgCmKdk3iDg-?usp=sharing",
+                "description": "Un tutor único que <strong>combina los tres niveles</strong>, diseñado para apoyar de forma transversal. Ideal para docentes, familias y cuidadores que buscan actividades y estrategias adaptadas al ritmo individual de cada niño o grupo."
+            }
+        },
+        "primaria": {
+            "title": "Asistentes Virtuales de Primaria",
+            "intro_image": "/assets/images/ai-tools/2025/07/72147ed3-58e5-4974-9cf9-c22c3dec5934-300x300.jpg",
+            "intro": [
+                "En <strong>Academia CABSA</strong> contamos con <strong>Asistentes Virtuales Inteligentes</strong>, diseñados para acompañar el aprendizaje y la enseñanza en los seis grados de primaria. Cada asistente está especializado en los contenidos y competencias correspondientes a su nivel educativo, apoyando tanto el desarrollo académico de los estudiantes como la labor docente en el aula.",
+                "Estos asistentes funcionan en <strong>colaboración con tecnologías avanzadas</strong> como <strong>OpenAI, Google Gemini y otras plataformas de inteligencia artificial</strong>, lo que garantiza que estén <strong>siempre actualizados con las últimas funciones y herramientas educativas</strong>. Además, han sido <strong>entrenados por expertos educadores y alimentados con información oficial de la Secretaría de Educación Pública (SEP)</strong> bajo el marco del <strong>Nuevo Modelo Educativo Mexicano (NEM)</strong>, asegurando coherencia pedagógica y pertinencia curricular.",
+                "Los <strong>Asistentes Virtuales de Primaria</strong> no solo ayudan a los estudiantes a comprender los temas fundamentales de cada materia, sino que también <strong>sirven como herramientas pedagógicas para docentes</strong> y como <strong>guía de apoyo para madres, padres y tutores</strong>, fortaleciendo el acompañamiento académico en casa."
+            ],
+            "highlights": "<strong>Alineados</strong> con los libros oficiales de texto gratuito y el marco educativo SEP-NEM.<br>\n<strong>Actualizados continuamente</strong> mediante su integración con plataformas como OpenAI y Google Gemini.<br>\n<strong>Disponibles 24/7</strong> para responder preguntas, explicar conceptos, sugerir estrategias de estudio o repasar temas antes de una evaluación.<br>\n<strong>Accesibles para las familias</strong>, facilitando el seguimiento académico y la orientación personalizada.<br>\n<strong>Entrenados por especialistas en educación básica</strong>, garantizando precisión, claridad y un enfoque centrado en el aprendizaje significativo.",
+            "cards": [
+                {
+                    "level": "primaria",
+                    "number": "1.º",
+                    "title": "Asistente de 1.º de Primaria",
+                    "image": "/assets/images/ai-tools/2025/12/verdePrim-300x233.png",
+                    "gpt_url": "https://chatgpt.com/g/g-69711d48a414819185bdf49a2b1cc904-asistente-virtual-docente-1o-primaria",
+                    "gemini_url": "https://gemini.google.com/gem/1v5wZQSRIP7NbHKWibsolkXaOoao0CtTy?usp=sharing",
+                    "description": "Acompaña el inicio del aprendizaje formal con explicaciones sencillas para leer, escribir y comprender los primeros conceptos matemáticos."
+                },
+                {
+                    "level": "primaria",
+                    "number": "2.º",
+                    "title": "Asistente de 2.º de Primaria",
+                    "image": "/assets/images/ai-tools/2025/12/amarilloPrim-300x233.png",
+                    "gpt_url": "https://chatgpt.com/g/g-69712861b4688191900079468217ff40-asistente-virtual-docente-2o-primaria",
+                    "gemini_url": "https://gemini.google.com/gem/1W_YCjSSQXfZ-8pCPajpazaoKnbarCr_G?usp=sharing",
+                    "description": "Refuerza la lectura, escritura y operaciones básicas, fomentando la curiosidad y la confianza en el aprendizaje."
+                },
+                {
+                    "level": "primaria",
+                    "number": "3.º",
+                    "title": "Asistente de 3.º de Primaria",
+                    "image": "/assets/images/ai-tools/2025/12/azulPrim-300x233.png",
+                    "gpt_url": "https://chatgpt.com/g/g-697129c7f49081918e74c5a06abc1ab3-asistente-virtual-docente-3o-primaria",
+                    "gemini_url": "https://gemini.google.com/gem/1pWHkYpyupRIlqyfZjzh8cZ1cgSFLCaHY?usp=sharing",
+                    "description": "Apoya el desarrollo de la comprensión lectora, la resolución de problemas y el pensamiento lógico."
+                },
+                {
+                    "level": "primaria",
+                    "number": "4.º",
+                    "title": "Asistente de 4.º de Primaria",
+                    "image": "/assets/images/ai-tools/2025/12/rosa-300x233.png",
+                    "gpt_url": "https://chatgpt.com/g/g-69712d5c052481919bb5ed9debd58baf-asistente-virtual-docente-4o-primaria",
+                    "gemini_url": "https://gemini.google.com/gem/1bh3uc62f2p-dHva1AmT3d2mr-UW_DTxB?usp=sharing",
+                    "description": "Facilita el aprendizaje de temas más complejos en matemáticas, ciencias y español, promoviendo el razonamiento crítico."
+                },
+                {
+                    "level": "primaria",
+                    "number": "5.º",
+                    "title": "Asistente de 5.º de Primaria",
+                    "image": "/assets/images/ai-tools/2025/12/naranja-300x233.png",
+                    "gpt_url": "https://chatgpt.com/g/g-69713495f71c8191bbed5874d7ebb5ea-asistente-virtual-docente-5o-primaria",
+                    "gemini_url": "https://gemini.google.com/gem/1Ng6M9izLL0aky3NVl0Kzcy7m8MfB7hUb?usp=sharing",
+                    "description": "Refuerza habilidades avanzadas de lectura, redacción y análisis, preparando al estudiante para nuevos retos académicos."
+                },
+                {
+                    "level": "primaria",
+                    "number": "6.º",
+                    "title": "Asistente de 6.º de Primaria",
+                    "image": "/assets/images/ai-tools/2025/12/rojo-300x233.png",
+                    "gpt_url": "https://chatgpt.com/g/g-69713de23b5881918619d2f254bc12c8-asistente-virtual-docente-6o-primaria",
+                    "gemini_url": "https://gemini.google.com/gem/1k2vYu28quA_qym2bBs1cwBs646SCppyX?usp=sharing",
+                    "description": "Consolida los aprendizajes clave y prepara a los estudiantes para la transición a la secundaria con recursos claros y efectivos."
+                }
+            ],
+            "integrator": {
+                "level": "primaria",
+                "number": null,
+                "title": "Tutor \"Sin Recetas\" para Profesores",
+                "image": "/assets/images/ai-tools/2025/11/ChatGPT-Image-24-nov-2025-12_12_46-300x300.png",
+                "gpt_url": "https://chatgpt.com/g/g-6994b7e7fea481919d14685a28367320-asistente-primaria-sin-recetas",
+                "gemini_url": "https://gemini.google.com/gem/1mo-jxTMVC6EnUUOQ-06JjWjDtUZbPUO0?usp=sharing",
+                "description": "Especializado en el enfoque pedagógico de la Nueva Escuela Mexicana, este tutor acompaña a los maestros con propuestas concretas, interpretación del libro <em>\"Sin recetas\"</em> y orientación práctica para transformar la enseñanza sin complicaciones ni fórmulas rígidas."
+            }
+        },
+        "secundaria": {
+            "title": "Asistentes Virtuales de Secundaria",
+            "intro_image": "/assets/images/ai-tools/2025/07/72147ed3-58e5-4974-9cf9-c22c3dec5934-300x300.jpg",
+            "intro": [
+                "En <strong>Academia CABSA</strong> contamos con <strong>Asistentes Virtuales Inteligentes</strong>, diseñados para acompañar el aprendizaje y la enseñanza en los tres grados de secundaria. Cada asistente está especializado en los campos de conocimiento y competencias correspondientes a este nivel educativo, promoviendo el pensamiento crítico, la autonomía y la preparación para la educación media superior.",
+                "Estos asistentes funcionan en <strong>colaboración con tecnologías avanzadas</strong> como <strong>OpenAI, Google Gemini y otras plataformas de inteligencia artificial</strong>, garantizando que estén <strong>siempre actualizados con las nuevas funciones y herramientas educativas</strong>. Además, han sido <strong>entrenados por expertos educadores y alimentados con información oficial de la Secretaría de Educación Pública (SEP)</strong>, en coherencia con el <strong>Nuevo Modelo Educativo Mexicano (NEM)</strong>, lo que asegura su alineación curricular y pertinencia pedagógica.",
+                "Los <strong>Asistentes Virtuales de Secundaria</strong> apoyan a los estudiantes en la <strong>resolución de dudas, la comprensión de temas clave y la preparación para evaluaciones</strong>, al tiempo que <strong>sirven como herramientas pedagógicas para docentes</strong>."
+            ],
+            "highlights": "<strong>Alineados</strong> con los libros oficiales de texto gratuito y el marco educativo SEP-NEM.<br>\n<strong>Actualizados continuamente</strong> mediante su integración con plataformas como OpenAI y Google Gemini.<br>\n<strong>Disponibles 24/7</strong> para responder preguntas, explicar conceptos, sugerir estrategias de estudio o repasar temas antes de una evaluación.<br>\n<strong>Accesibles para las familias</strong>, facilitando el seguimiento académico y la orientación personalizada.<br>\n<strong>Entrenados por especialistas en educación básica y media</strong>, garantizando rigor académico, claridad conceptual y un acompañamiento formativo integral.",
+            "cards": [
+                {
+                    "level": "secundaria",
+                    "number": "1.º",
+                    "title": "Asistente de 1.º de Secundaria",
+                    "image": "/assets/images/ai-tools/2025/11/ChatGPT-Image-24-nov-2025-11_57_17-300x300.png",
+                    "gpt_url": "https://chatgpt.com/g/g-69725cf75afc8191a416ada8fe124386-asistente-virtual-docente-1o-secundaria",
+                    "gemini_url": "https://gemini.google.com/gem/1hYBNX4kRGVMNFQaEoQd4qABSnC-t1Jg9?usp=sharing",
+                    "description": "Ofrece a los estudiantes, docentes y familias, herramientas para reforzar el aprendizaje desde casa y el aula."
+                },
+                {
+                    "level": "secundaria",
+                    "number": "2.º",
+                    "title": "Asistente de 2.º de Secundaria",
+                    "image": "/assets/images/ai-tools/2025/11/ChatGPT-Image-24-nov-2025-12_05_28-300x300.png",
+                    "gpt_url": "https://chatgpt.com/g/g-697260aef5d081918ad0fddfca6c3c8f-asistente-virtual-docente-2o-secundaria",
+                    "gemini_url": "https://gemini.google.com/gem/1UzDMZ-ShqqIFBhtbEfghifk2ek9cynvU?usp=sharing",
+                    "description": "Acompaña el proceso de aprendizaje intermedio con explicaciones claras y recursos útiles."
+                },
+                {
+                    "level": "secundaria",
+                    "number": "3.º",
+                    "title": "Asistente de 3.º de Secundaria",
+                    "image": "/assets/images/ai-tools/2025/11/ChatGPT-Image-24-nov-2025-12_05_23-300x300.png",
+                    "gpt_url": "https://chatgpt.com/g/g-69726643a0dc8191b06b5546ea9f60ad-asistente-virtual-docente-3deg-secundaria",
+                    "gemini_url": "https://gemini.google.com/gem/12xzoCS0GWkvENKM9Ln35yeNzKnIGR-tI?usp=sharing",
+                    "description": "Fortalece los conocimientos previos y apoya en la preparación para el siguiente nivel educativo."
+                }
+            ],
+            "integrator": {
+                "level": "secundaria",
+                "number": null,
+                "title": "Asistente \"Sin Recetas\" para Profesores",
+                "image": "/assets/images/ai-tools/2025/11/ChatGPT-Image-24-nov-2025-12_12_46-300x300.png",
+                "gpt_url": "https://chatgpt.com/g/g-6994b99078448191a23990dbefa1ec4c-asistente-secundaria-sin-recetas",
+                "gemini_url": "https://gemini.google.com/gem/1ZJ6ljoC5_NGZr7cglPmttT1Y2Udbh1Fn?usp=sharing",
+                "description": "Especializado en el enfoque pedagógico de la Nueva Escuela Mexicana, este tutor acompaña a los maestros con propuestas concretas, interpretación del libro <em>\"Sin recetas\"</em> y orientación práctica para transformar la enseñanza sin complicaciones ni fórmulas rígidas."
+            }
+        }
+    },
+    "tutor": {
+        "preescolar": {
+            "title": "Tutores Virtuales de Preescolar",
+            "intro_image": "/assets/images/ai-tools/2025/07/72147ed3-58e5-4974-9cf9-c22c3dec5934-300x300.jpg",
+            "intro": [
+                "En <strong>Academia CABSA</strong> contamos con <strong>Tutores Virtuales Inteligentes</strong> diseñados para fortalecer el aprendizaje y la enseñanza en los tres grados de preescolar. Cada tutor está especializado en el desarrollo cognitivo, socioemocional y motriz correspondiente a su nivel, brindando apoyo pedagógico y orientación educativa tanto en el aula como en el hogar.",
+                "Estos tutores funcionan en <strong>colaboración con tecnologías avanzadas</strong> como <strong>OpenAI, Google Gemini y otras plataformas de inteligencia artificial</strong>, lo que garantiza que estén <strong>siempre actualizados con las últimas funciones y herramientas</strong>. Además, han sido <strong>entrenados por expertos educadores y alimentados con información oficial de la Secretaría de Educación Pública (SEP)</strong>, en coherencia con el <strong>Nuevo Modelo Educativo Mexicano (NEM)</strong>, asegurando pertinencia y alineación curricular.",
+                "El enfoque de los <strong>Tutores Virtuales de Preescolar</strong> está dirigido principalmente a <strong>docentes y padres educadores</strong>, quienes utilizan estas herramientas para diseñar experiencias de aprendizaje más ricas, personalizadas y afectivas. Los tutores ofrecen <strong>orientación pedagógica</strong>, <strong>recursos de apoyo didáctico</strong> y <strong>consejos prácticos para madres, padres y cuidadores</strong>, fortaleciendo el vínculo entre escuela y familia."
+            ],
+            "highlights": "<strong>Alineados</strong> con los libros oficiales de texto gratuito y el marco pedagógico de la SEP-NEM.<br>\n<strong>Actualizados continuamente</strong> mediante su integración con plataformas como OpenAI y Google Gemini.<br>\n<strong>Dirigidos a docentes y padres</strong>, como guías inteligentes para acompañar el desarrollo integral de los niños y niñas.<br>\n<strong>Entrenados por especialistas en educación infantil</strong>, garantizando una orientación sólida, segura y coherente con el contexto educativo nacional.",
+            "cards": [
+                {
+                    "level": "preescolar",
+                    "number": "1.º",
+                    "title": "Tutor de 1.º de Preescolar",
+                    "image": "/assets/images/ai-tools/2025/07/1-preescolar--300x233.png",
+                    "gpt_url": "https://chatgpt.com/g/g-69711707e7c88191b2801141dce49ffd-tutor-virtual-1o-preescolar",
+                    "gemini_url": "https://gemini.google.com/gem/138xQhDdm572NMZOVyflMKuB5rLWhesYD?usp=sharing",
+                    "description": "Guía en el descubrimiento de los primeros aprendizajes, con actividades sensoriales, juegos y dinámicas que despiertan la curiosidad natural de los pequeños."
+                },
+                {
+                    "level": "preescolar",
+                    "number": "2.º",
+                    "title": "Tutor de 2.º de Preescolar",
+                    "image": "/assets/images/ai-tools/2025/07/2-preescolar-300x233.png",
+                    "gpt_url": "https://chatgpt.com/g/g-697118ee4df88191ac4412fb821cdbc3-tutor-virtual-2o-preescolar",
+                    "gemini_url": "https://gemini.google.com/gem/1SeT7wNsp_wDGWrWf2EPsW3-MJioPB1fP?usp=sharing",
+                    "description": "Acompaña el desarrollo de nuevas capacidades de comunicación, pensamiento lógico y creatividad, para consolidar la autonomía y la exploración del entorno."
+                },
+                {
+                    "level": "preescolar",
+                    "number": "3.º",
+                    "title": "Tutor de 3.º de Preescolar",
+                    "image": "/assets/images/ai-tools/2025/07/3-preescolar-300x233.png",
+                    "gpt_url": "https://chatgpt.com/g/g-697119a1f7908191aa9d69bfaf4041dc-tutor-virtual-3o-preescolar",
+                    "gemini_url": "https://gemini.google.com/gem/1KA5eI6NKGpO4BG5Wi_qXo92YYPxCPEZS?usp=sharing",
+                    "description": "Prepara a los niños y niñas para la transición a primaria, reforzando habilidades como la atención, la expresión oral y la comprensión básica de conceptos matemáticos y de lectoescritura."
+                }
+            ],
+            "integrator": null
+        },
+        "primaria": {
+            "title": "Tutores Virtuales de Primaria",
+            "intro_image": "/assets/images/ai-tools/2025/07/72147ed3-58e5-4974-9cf9-c22c3dec5934-300x300.jpg",
+            "intro": [
+                "En <strong>Academia CABSA</strong> contamos con <strong>Tutores Virtuales Inteligentes</strong>, diseñados para acompañar el aprendizaje y la enseñanza en los seis grados de primaria. Cada tutor está especializado en los contenidos y competencias correspondientes a su nivel educativo, apoyando tanto el desarrollo académico de los estudiantes como la labor docente en el aula.",
+                "Estos tutores funcionan en <strong>colaboración con tecnologías avanzadas</strong> como <strong>OpenAI, Google Gemini y otras plataformas de inteligencia artificial</strong>, lo que garantiza que estén <strong>siempre actualizados con las últimas funciones y herramientas educativas</strong>. Además, han sido <strong>entrenados por expertos educadores y alimentados con información oficial de la Secretaría de Educación Pública (SEP)</strong> bajo el marco del <strong>Nuevo Modelo Educativo Mexicano (NEM)</strong>, asegurando coherencia pedagógica y pertinencia curricular.",
+                "Los <strong>Tutores Virtuales de Primaria</strong> no solo ayudan a los estudiantes a comprender los temas fundamentales de cada materia, sino que también <strong>sirven como herramientas pedagógicas para docentes</strong> y como <strong>guía de apoyo para madres, padres y tutores</strong>, fortaleciendo el acompañamiento académico en casa."
+            ],
+            "highlights": "<strong>Alineados</strong> con los libros oficiales de texto gratuito y el marco educativo SEP-NEM.<br>\n<strong>Actualizados continuamente</strong> mediante su integración con plataformas como OpenAI y Google Gemini.<br>\n<strong>Disponibles 24/7</strong> para responder preguntas, explicar conceptos, sugerir estrategias de estudio o repasar temas antes de una evaluación.<br>\n<strong>Accesibles para las familias</strong>, facilitando el seguimiento académico y la orientación personalizada.<br>\n<strong>Entrenados por especialistas en educación básica</strong>, garantizando precisión, claridad y un enfoque centrado en el aprendizaje significativo.",
+            "cards": [
+                {
+                    "level": "primaria",
+                    "number": "1.º",
+                    "title": "Tutor de 1.º de Primaria",
+                    "image": "/assets/images/ai-tools/2025/07/1-primaria-1-300x233.png",
+                    "gpt_url": "https://chatgpt.com/g/g-6971416b08dc81919253192ac193eac7-tutor-virtual-1o-primaria",
+                    "gemini_url": "https://gemini.google.com/gem/1VMENEOzRPgDtRGdg2nwzFz0Gx52TIcEu?usp=sharing",
+                    "description": "Acompaña el inicio del aprendizaje formal con explicaciones sencillas para leer, escribir y comprender los primeros conceptos matemáticos."
+                },
+                {
+                    "level": "primaria",
+                    "number": "2.º",
+                    "title": "Tutor de 2.º de Primaria",
+                    "image": "/assets/images/ai-tools/2025/07/2-primaria-300x233.png",
+                    "gpt_url": "https://chatgpt.com/g/g-697147d551f08191a9db183880cf806f-tutor-virtual-2o-primaria",
+                    "gemini_url": "https://gemini.google.com/gem/1Oh9Ww5lQ6qsr3j7bmlf9AOZiNiMW7Hw2?usp=sharing",
+                    "description": "Refuerza la lectura, escritura y operaciones básicas, fomentando la curiosidad y la confianza en el aprendizaje."
+                },
+                {
+                    "level": "primaria",
+                    "number": "3.º",
+                    "title": "Tutor de 3.º de Primaria",
+                    "image": "/assets/images/ai-tools/2025/07/3-primaria-300x233.png",
+                    "gpt_url": "https://chatgpt.com/g/g-69714a827fec8191867301689fe55b5e-tutor-virtual-3o-primaria",
+                    "gemini_url": "https://gemini.google.com/gem/1H8wiEd55vHVhvWQiqi-iYQxkybn3qT3e?usp=sharing",
+                    "description": "Apoya el desarrollo de la comprensión lectora, la resolución de problemas y el pensamiento lógico."
+                },
+                {
+                    "level": "primaria",
+                    "number": "4.º",
+                    "title": "Tutor de 4.º de Primaria",
+                    "image": "/assets/images/ai-tools/2025/07/4-primaria-1-300x233.png",
+                    "gpt_url": "https://chatgpt.com/g/g-6971508408b081918b90ef161eec5676-tutor-virtual-4o-primaria",
+                    "gemini_url": "https://gemini.google.com/gem/1uusvldBn6LuuPJdd1l0xhKBoqbouWGbG?usp=sharing",
+                    "description": "Facilita el aprendizaje de temas más complejos en matemáticas, ciencias y español, promoviendo el razonamiento crítico."
+                },
+                {
+                    "level": "primaria",
+                    "number": "5.º",
+                    "title": "Tutor de 5.º de Primaria",
+                    "image": "/assets/images/ai-tools/2025/07/5-primaria-300x233.png",
+                    "gpt_url": "https://chatgpt.com/g/g-6971561696e0819182d22e2c9da904e5-tutor-virtual-5o-primaria",
+                    "gemini_url": "https://gemini.google.com/gem/191XF16P6WjWiv9YoSaelSxbFuMKKqBno?usp=sharing",
+                    "description": "Refuerza habilidades avanzadas de lectura, redacción y análisis, preparando al estudiante para nuevos retos académicos."
+                },
+                {
+                    "level": "primaria",
+                    "number": "6.º",
+                    "title": "Tutor de 6.º de Primaria",
+                    "image": "/assets/images/ai-tools/2025/07/6-primaria-1-300x233.png",
+                    "gpt_url": "https://chatgpt.com/g/g-697156f48db081918a34dbca65ac1f92-tutor-virtual-6o-primaria",
+                    "gemini_url": "https://gemini.google.com/gem/18ABvSqtm1-DGh5TSj3mpOuES3OV50Bcm?usp=sharing",
+                    "description": "Consolida los aprendizajes clave y prepara a los estudiantes para la transición a la secundaria con recursos claros y efectivos."
+                }
+            ],
+            "integrator": null
+        },
+        "secundaria": {
+            "title": "Tutores Virtuales de Secundaria",
+            "intro_image": "/assets/images/ai-tools/2025/07/72147ed3-58e5-4974-9cf9-c22c3dec5934-300x300.jpg",
+            "intro": [
+                "En <strong>Academia CABSA</strong> contamos con <strong>Tutores Virtuales Inteligentes</strong>, diseñados para acompañar el aprendizaje y la enseñanza en los tres grados de secundaria. Cada tutor está especializado en los campos de conocimiento y competencias correspondientes a este nivel educativo, promoviendo el pensamiento crítico, la autonomía y la preparación para la educación media superior.",
+                "Estos tutores funcionan en <strong>colaboración con tecnologías avanzadas</strong> como <strong>OpenAI, Google Gemini y otras plataformas de inteligencia artificial</strong>, garantizando que estén <strong>siempre actualizados con las nuevas funciones y herramientas educativas</strong>. Además, han sido <strong>entrenados por expertos educadores y alimentados con información oficial de la Secretaría de Educación Pública (SEP)</strong>, en coherencia con el <strong>Nuevo Modelo Educativo Mexicano (NEM)</strong>, lo que asegura su alineación curricular y pertinencia pedagógica.",
+                "Los <strong>Tutores Virtuales de Secundaria</strong> apoyan a los estudiantes en la <strong>resolución de dudas, la comprensión de temas clave y la preparación para evaluaciones</strong>, al tiempo que <strong>sirven como guía de apoyo para madres, padres y tutores</strong>, fortaleciendo el acompañamiento académico desde el hogar."
+            ],
+            "highlights": "<strong>Alineados</strong> con los libros oficiales de texto gratuito y el marco educativo SEP-NEM.<br>\n<strong>Actualizados continuamente</strong> mediante su integración con plataformas como OpenAI y Google Gemini.<br>\n<strong>Disponibles 24/7</strong> para responder preguntas, explicar conceptos, sugerir estrategias de estudio o repasar temas antes de una evaluación.<br>\n<strong>Accesibles para las familias</strong>, facilitando el seguimiento académico y la orientación personalizada.<br>\n<strong>Entrenados por especialistas en educación básica y media</strong>, garantizando rigor académico, claridad conceptual y un acompañamiento formativo integral.",
+            "cards": [
+                {
+                    "level": "secundaria",
+                    "number": "1.º",
+                    "title": "Tutor de 1.º de Secundaria",
+                    "image": "/assets/images/ai-tools/2025/07/1-secundaria-300x233.png",
+                    "gpt_url": "https://chatgpt.com/g/g-69727009aebc8191aeab96632fa067d7-tutor-virtual-1deg-secundaria",
+                    "gemini_url": "https://gemini.google.com/gem/1MXwlZhNGlDJqtHoZKKkuU2ermCnwCD26?usp=sharing",
+                    "description": "Ofrece a los estudiantes, docentes y familias, herramientas para reforzar el aprendizaje desde casa y el aula."
+                },
+                {
+                    "level": "secundaria",
+                    "number": "2.º",
+                    "title": "Tutor de 2.º de Secundaria",
+                    "image": "/assets/images/ai-tools/2025/07/amarillo-300x233.png",
+                    "gpt_url": "https://chatgpt.com/g/g-697270cd5c9c8191ad0c54f6757e1d59-tutor-virtual-2deg-secundaria",
+                    "gemini_url": "https://gemini.google.com/gem/1GfggUbIjGRBXUNM85H1K3weA0XmMcP2x?usp=sharing",
+                    "description": "Acompaña el proceso de aprendizaje intermedio con explicaciones claras y recursos útiles."
+                },
+                {
+                    "level": "secundaria",
+                    "number": "3.º",
+                    "title": "Tutor de 3.º de Secundaria",
+                    "image": "/assets/images/ai-tools/2025/07/azul-300x233.png",
+                    "gpt_url": "https://chatgpt.com/g/g-697271e761cc8191829118504c778467-tutor-virtual-3deg-secundaria",
+                    "gemini_url": "https://gemini.google.com/gem/1WAa_smxNkg6IFT-F7tODT9cOQoQyu4rK?usp=sharing",
+                    "description": "Fortalece los conocimientos previos y apoya en la preparación para el siguiente nivel educativo."
+                }
+            ],
+            "integrator": null
+        }
+    }
+}

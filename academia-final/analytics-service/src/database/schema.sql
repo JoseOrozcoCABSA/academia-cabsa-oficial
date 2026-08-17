@@ -1,0 +1,9 @@
+-- Catálogo del esquema vigente del servicio analytics-service.
+-- La definición ejecutable se mantiene en los modelos Sequelize y migraciones del servicio.
+-- analitica_actividad_aprendizaje
+-- analitica_avances_capsulas
+-- analitica_dias_activos
+-- analitica_eventos_asistentes_ia
+-- analitica_eventos_xp
+-- analitica_progreso_capsulas
+-- analitica_rachas

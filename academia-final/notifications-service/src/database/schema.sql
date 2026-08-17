@@ -1,0 +1,9 @@
+-- Catálogo del esquema vigente del servicio notifications-service.
+-- La definición ejecutable se mantiene en los modelos Sequelize y migraciones del servicio.
+-- notificaciones_archivos_correo
+-- notificaciones_intentos_entrega
+-- notificaciones_plantillas
+-- notificaciones_recordatorios
+-- notificaciones_registros
+-- notificaciones_soporte_adjuntos
+-- notificaciones_soporte_tickets

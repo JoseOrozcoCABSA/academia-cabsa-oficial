@@ -1,0 +1,171 @@
+/**
+ * @file Controlador de registro y autenticación de usuarios finales.
+ *
+ * Es la puerta de entrada pública del servicio: las rutas de registro, acceso y
+ * catálogos de alta se montan sin `authMiddleware`, porque quien las llama
+ * todavía no tiene token. La única excepción es {@link AuthController.me}, que
+ * sí lo exige.
+ *
+ * A diferencia del resto de los controladores del servicio, éste no deriva del
+ * CRUD genérico: el alta de un usuario no es un `INSERT` sino un proceso con
+ * validaciones, comprobación de duplicados, cifrado de contraseña y emisión de
+ * token. Toda esa lógica vive en `auth.service.ts`; aquí sólo se traduce entre
+ * HTTP y el servicio.
+ *
+ * @see auth.service.ts     Validaciones y reglas de negocio del registro y el acceso.
+ * @see users.controller.ts CRUD administrativo de la tabla de cuentas.
+ */
+
+/** Tipos de Express. Sólo tipos: no llegan al paquete compilado. */
+import type { Request, Response } from 'express';
+/** Servicio de autenticación, donde están las reglas de negocio. */
+import service from '#services/auth.service';
+/** Formatea la respuesta con el sobre uniforme del proyecto. */
+import { ok } from '#utils/response';
+/** Manejadores para la entidad `auth`. */
+import { AppError } from '#utils/errors';
+import advisorService from '#services/advisor-management.service';
+
+export class AuthController {
+  /**
+   * `POST /register` — Da de alta una cuenta nueva.
+   *
+   * El cuerpo se pasa al servicio sin tocarlo; es él quien valida nombre,
+   * correo, longitud y confirmación de contraseña, aceptación de términos,
+   * código postal y colonia, y quien rechaza los duplicados.
+   *
+   * @returns 201 con los datos del usuario creado, sin el hash de la contraseña.
+   * @throws {AppError} 400 `INVALID_REGISTRATION`, `PASSWORD_CONFIRMATION_MISMATCH`
+   *   o `TERMS_REQUIRED` según qué validación falle.
+   */
+  register = async (request: Request, response: Response): Promise<void> => {
+    ok(response, await service.register(request.body), 201);
+  };
+
+  /**
+   * `POST /login` — Autentica y devuelve un JWT.
+   *
+   * Acepta correo o nombre de usuario en el campo `identity`. El indicador
+   * `remember` alarga la vigencia del token.
+   *
+   * @returns 200 con el token y el perfil público del usuario.
+   */
+  login = async (request: Request, response: Response): Promise<void> => {
+    ok(response, await service.login(request.body));
+  };
+
+  forgotPassword = async (request: Request, response: Response): Promise<void> => {
+    ok(response, await service.forgotPassword(request.body), 202);
+  };
+
+  resetPassword = async (request: Request, response: Response): Promise<void> => {
+    ok(response, await service.resetPassword(request.body));
+  };
+
+  verifyEmail = async (request: Request, response: Response): Promise<void> => {
+    ok(response, await service.verifyEmail(request.body));
+  };
+
+  resendVerification = async (request: Request, response: Response): Promise<void> => {
+    ok(response, await service.resendEmailVerification(request.body), 202);
+  };
+
+  /**
+   * `GET /registration/catalog` — Datos fijos que necesita el formulario de alta.
+   *
+   * Devuelve las regiones de FOMAQRO y las rutas de los avisos legales. Es
+   * síncrono y no consulta la base de datos: sale de constantes en código, así
+   * que el frontend puede cachearlo.
+   *
+   * @returns 200 con `{ fomaqroRegions, legal }`.
+   */
+  registrationCatalog = (
+    _request: Request,
+    response: Response,
+  ): void => {
+    ok(response, service.registrationCatalog());
+  };
+
+  /**
+   * `GET /registration/postal/:postalCode` — Resuelve un código postal.
+   *
+   * Alimenta los desplegables encadenados del formulario de alta: a partir de
+   * los cinco dígitos devuelve el estado, el municipio y las colonias
+   * disponibles.
+   *
+   * Express puede entregar el parámetro como arreglo si aparece repetido en la
+   * URL; se toma el primer valor para pasar siempre una cadena al servicio.
+   *
+   * @returns 200 con `{ postalCode, state, municipality, city, colonies }`.
+   * @throws {AppError} 422 `INVALID_POSTAL_CODE` si no son cinco dígitos; 404
+   *   `POSTAL_CODE_NOT_FOUND` si no está en el catálogo.
+   */
+  postalCode = async (
+    request: Request,
+    response: Response,
+  ): Promise<void> => {
+    const postalCode = request.params.postalCode;
+    ok(
+      response,
+      await service.postalCode(
+        Array.isArray(postalCode) ? postalCode[0] : postalCode,
+      ),
+    );
+  };
+
+import { Request, Response } from 'express';
+import { AppError } from '#utils/errors';
+import { ok } from '#utils/responses';
+import service from '#services/auth.service';
+import advisorService from '#services/advisor-management.service';
+
+/** Manejadores para la entidad `auth`. */
+export class AuthController {
+  /**
+   * `GET /me` — Devuelve el contenido del token de quien llama.
+   *
+   * No consulta la base de datos: responde exactamente lo que `authMiddleware`
+   * dejó en `request.auth` al verificar la firma. Por eso refleja el estado del
+   * usuario **en el momento en que se emitió el token**; si sus roles o
+   * permisos cambiaron después, aquí se seguirán viendo los anteriores hasta
+   * que vuelva a iniciar sesión.
+   *
+   * Requiere `authMiddleware` en la ruta. Sin él, `request.auth` viene
+   * indefinido y la respuesta sale vacía en lugar de dar 401.
+   *
+   * @returns 200 con el payload del token.
+   */
+  me = async (request: Request, response: Response): Promise<void> => {
+    ok(response, request.auth);
+  };
+
+  /**
+   * `GET /advisor/profile` — Devuelve el perfil del asesor.
+   *
+   * Requiere `authMiddleware` en la ruta.
+   * Verifica que el usuario tenga rol de asesor.
+   *
+   * @returns 200 con los datos del perfil del asesor.
+   */
+  advisorProfile = async (request: Request, response: Response): Promise<void> => {
+    // Get the base user data
+    const userData = await service.me(request.auth);
+    
+    // Get the specific advisor data
+    const advisorData = await advisorService.getAdvisorProfile(request.auth.sub);
+    
+    // Combine and return the data
+    ok(response, {
+      id: userData.id,
+      email: userData.email,
+      username: userData.username,
+      displayName: userData.displayName,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      ...advisorData
+    });
+  };
+}
+
+/** Instancia única lista para montar en `routes/auth.routes.ts`. */
+export default new AuthController();

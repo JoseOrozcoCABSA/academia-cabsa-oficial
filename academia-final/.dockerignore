@@ -1,0 +1,15 @@
+.git
+.runtime
+**/node_modules
+**/dist
+**/*.log
+runtime-logs
+frontend-logs
+database-backups
+**/runtime-media
+**/runtime-media-temp
+**/.env
+.env.platform
+.codebase-memory
+*.sql
+*.sql.gz

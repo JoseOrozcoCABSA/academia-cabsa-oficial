@@ -1,0 +1,89 @@
+# Configuración local y secretos. Sólo se versiona la plantilla segura.
+.env
+.env.*
+!.env.example
+
+# Dependencias y compilados reproducibles
+**/node_modules/
+**/dist/
+**/*.tsbuildinfo
+
+# Registros de ejecucion (pueden contener datos personales)
+**/*.log
+runtime-logs/
+frontend-logs/
+**/runtime-media/
+.runtime/
+#database-backups/
+
+# Archivos locales del sistema y herramientas
+.DS_Store
+Thumbs.db
+.codebase-memory/
+
+
+
+**/.env
+**/node_modules/
+**/dist/
+runtime-logs/
+runtime-pids/
+database/backups/
+
+# Herramientas, memoria y asistentes locales de IA
+.codebase-memory/
+.opencode/
+.claude/
+.codex/
+.cursor/
+.windsurf/
+*.prompt
+*.chat
+
+# Documentacion, reportes y notas generadas localmente
+*.md
+*.mdx
+*.markdown
+
+# Respaldos y datos locales
+database-backups/
+*.sql.gz
+*.dump
+*.bak
+# Copias exportadas en la raiz; los schemas y migrations del codigo se conservan.
+/academia_matematicas_*.sql
+
+# Certificados locales y llaves privadas
+certificados/
+*.crt
+*.cert
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Resultados, temporales y carpetas de trabajo
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+.tmp-*/
+tmp/
+temp/
+*.tmp
+*.temp
+*.cache
+*.swp
+*~
+*.txt
+
+
+
+# Archivos locales del sistema y editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+
+

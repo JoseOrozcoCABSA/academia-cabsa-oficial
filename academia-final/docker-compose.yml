@@ -1,0 +1,257 @@
+name: academia-final
+
+x-backend: &backend
+  restart: unless-stopped
+  init: true
+  networks: [academia-interna]
+  extra_hosts: ["host.docker.internal:host-gateway"]
+  stop_grace_period: 20s
+  pids_limit: 128
+  logging:
+    driver: json-file
+    options: { max-size: "10m", max-file: "3" }
+  environment: &backend-environment
+    NODE_ENV: ${NODE_ENV:-production}
+    BIND_HOST: 0.0.0.0
+    NODE_OPTIONS: --max-old-space-size=384
+    DB_HOST: ${DB_DOCKER_HOST:-${DB_HOST:-host.docker.internal}}
+    DB_PORT: ${DB_PORT:-3306}
+    DB_NAME: ${DB_NAME:?Configura DB_NAME en .env}
+    DB_USER: ${DB_USER:?Configura DB_USER en .env}
+    DB_PASSWORD: ${DB_PASSWORD:-}
+    DB_POOL_MAX: ${DB_POOL_MAX:-5}
+    DB_POOL_MIN: ${DB_POOL_MIN:-0}
+    DB_POOL_ACQUIRE_MS: ${DB_POOL_ACQUIRE_MS:-10000}
+    DB_POOL_IDLE_MS: ${DB_POOL_IDLE_MS:-10000}
+    DB_POOL_EVICT_MS: ${DB_POOL_EVICT_MS:-1000}
+    JWT_SECRET: ${JWT_SECRET:?Configura JWT_SECRET en .env}
+    JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-8h}
+    INTERNAL_SERVICE_KEY: ${INTERNAL_SERVICE_KEY:?Configura INTERNAL_SERVICE_KEY en .env}
+    CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:6007,http://localhost:6008}
+
+x-healthcheck: &backend-healthcheck
+  test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:'+process.env.PORT+'/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+  interval: 15s
+  timeout: 5s
+  retries: 8
+  start_period: 20s
+
+services:
+  academia-service:
+    <<: *backend
+    image: academia-final/academia-service:local
+    build: { context: ., dockerfile: infra/Dockerfile.backend, args: { SERVICE: academia-service } }
+    command: ["sh", "-c", "node dist/src/database/migrations/exams.migrate.js && npm start"]
+    environment:
+      <<: *backend-environment
+      PORT: ${PORT_ACADEMIA:-6001}
+      SERVICE_NAME: academia-service
+    expose: ["${PORT_ACADEMIA:-6001}"]
+    mem_limit: 512m
+    cpus: 1.5
+    healthcheck: *backend-healthcheck
+
+  ai-service:
+    <<: *backend
+    image: academia-final/ai-service:local
+    build: { context: ., dockerfile: infra/Dockerfile.backend, args: { SERVICE: ai-service } }
+    environment:
+      <<: *backend-environment
+      PORT: ${PORT_AI:-6002}
+      SERVICE_NAME: ai-service
+      QDRANT_URL: ${QDRANT_DOCKER_URL:-http://host.docker.internal:6333}
+      QDRANT_COLLECTION: ${QDRANT_COLLECTION:-academia_cabsa}
+    expose: ["${PORT_AI:-6002}"]
+    mem_limit: 512m
+    cpus: 1.5
+    healthcheck: *backend-healthcheck
+
+  content-service:
+    <<: *backend
+    image: academia-final/content-service:local
+    build: { context: ., dockerfile: infra/Dockerfile.backend, args: { SERVICE: content-service } }
+    command: ["sh", "-c", "node dist/src/database/migrations/blog-image-position.migrate.js && npm start"]
+    environment:
+      <<: *backend-environment
+      PORT: ${PORT_CONTENT:-6003}
+      SERVICE_NAME: content-service
+      NODE_OPTIONS: --max-old-space-size=768
+      MEDIA_STORAGE_PATH: ${MEDIA_STORAGE_PATH:-runtime-media}
+      MEDIA_MAX_FILE_MB: ${MEDIA_MAX_FILE_MB:-25}
+      PUBLIC_API_URL: ${API_PUBLIC_URL:-http://localhost:6080}
+    expose: ["${PORT_CONTENT:-6003}"]
+    volumes: ["academia-media:/app/runtime-media"]
+    mem_limit: 1024m
+    cpus: 2.0
+    healthcheck:
+      <<: *backend-healthcheck
+      start_period: 25s
+
+  analytics-service:
+    <<: *backend
+    image: academia-final/analytics-service:local
+    build: { context: ., dockerfile: infra/Dockerfile.backend, args: { SERVICE: analytics-service } }
+    command: ["sh", "-c", "node dist/src/database/migrations/platform-events.migrate.js && npm start"]
+    environment:
+      <<: *backend-environment
+      PORT: ${PORT_ANALYTICS:-6004}
+      SERVICE_NAME: analytics-service
+      NODE_OPTIONS: --max-old-space-size=512
+      ANALYTICS_PLATFORM_EVENTS_PER_MINUTE: ${ANALYTICS_PLATFORM_EVENTS_PER_MINUTE:-30}
+      ANALYTICS_AI_EVENTS_PER_MINUTE: ${ANALYTICS_AI_EVENTS_PER_MINUTE:-180}
+      ANALYTICS_EVENTS_PER_DAY: ${ANALYTICS_EVENTS_PER_DAY:-3000}
+      ANALYTICS_PAGE_VIEW_DEDUPE_SECONDS: ${ANALYTICS_PAGE_VIEW_DEDUPE_SECONDS:-300}
+      ANALYTICS_CLICK_DEDUPE_SECONDS: ${ANALYTICS_CLICK_DEDUPE_SECONDS:-60}
+      ANALYTICS_IMPRESSION_DEDUPE_SECONDS: ${ANALYTICS_IMPRESSION_DEDUPE_SECONDS:-300}
+    expose: ["${PORT_ANALYTICS:-6004}"]
+    depends_on: { academia-service: { condition: service_healthy } }
+    mem_limit: 768m
+    cpus: 2.0
+    healthcheck: *backend-healthcheck
+
+  users-service:
+    <<: *backend
+    image: academia-final/users-service:local
+    build: { context: ., dockerfile: infra/Dockerfile.backend, args: { SERVICE: users-service } }
+    command: ["sh", "-c", "node dist/src/database/migrations/registration-profile-account.migrate.js && node dist/src/database/migrations/integrity-constraints.migrate.js && node dist/src/database/migrations/scholarship-codes.migrate.js && npm start"]
+    environment:
+      <<: *backend-environment
+      PORT: ${PORT_USERS:-6005}
+      SERVICE_NAME: users-service
+      NODE_OPTIONS: --max-old-space-size=512
+      INTERNAL_SERVICE_KEY: ${INTERNAL_SERVICE_KEY:?Configura INTERNAL_SERVICE_KEY en .env}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:6007}
+      NOTIFICATIONS_SERVICE_URL: http://notifications-service:${PORT_NOTIFICATIONS:-6006}
+    expose: ["${PORT_USERS:-6005}"]
+    depends_on: { notifications-service: { condition: service_healthy } }
+    mem_limit: 768m
+    cpus: 2.0
+    healthcheck: *backend-healthcheck
+
+  notifications-service:
+    <<: *backend
+    image: academia-final/notifications-service:local
+    build: { context: ., dockerfile: infra/Dockerfile.backend, args: { SERVICE: notifications-service } }
+    environment:
+      <<: *backend-environment
+      PORT: ${PORT_NOTIFICATIONS:-6006}
+      SERVICE_NAME: notifications-service
+      INTERNAL_SERVICE_KEY: ${INTERNAL_SERVICE_KEY:?Configura INTERNAL_SERVICE_KEY en .env}
+      SMTP_HOST: ${SMTP_HOST:-smtp.gmail.com}
+      SMTP_PORT: ${SMTP_PORT:-465}
+      SMTP_SECURE: ${SMTP_SECURE:-true}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME:-Academia CABSA}
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:-}
+      SUPPORT_STORAGE_PATH: /app/runtime-support
+    expose: ["${PORT_NOTIFICATIONS:-6006}"]
+    volumes:
+      - academia-support:/app/runtime-support
+    mem_limit: 512m
+    cpus: 1.0
+    healthcheck:
+      <<: *backend-healthcheck
+      start_period: 25s
+
+  api-gateway:
+    <<: *backend
+    image: academia-final/api-gateway:local
+    build: { context: ., dockerfile: infra/Dockerfile.backend, args: { SERVICE: api-gateway } }
+    environment:
+      <<: *backend-environment
+      PORT: ${PORT_GATEWAY:-6080}
+      SERVICE_NAME: api-gateway
+      INTERNAL_SERVICE_KEY: ${INTERNAL_SERVICE_KEY:?Configura INTERNAL_SERVICE_KEY en .env}
+      AUTH_SERVICE_URL: http://users-service:${PORT_USERS:-6005}
+      REQUEST_TIMEOUT_MS: ${REQUEST_TIMEOUT_MS:-10000}
+      RATE_LIMIT_WINDOW_MS: ${RATE_LIMIT_WINDOW_MS:-60000}
+      RATE_LIMIT_MAX_REQUESTS: ${RATE_LIMIT_MAX_REQUESTS:-120}
+      TRUST_PROXY_HOPS: ${TRUST_PROXY_HOPS:-0}
+      # Vacio por defecto: el Gateway usa el limitador local en memoria.
+      # Para probar Redis ejecute ejecutar-todo.sh --con-redis.
+      REDIS_URL: ${REDIS_URL:-}
+      ACADEMIA_SERVICE_URL: http://academia-service:${PORT_ACADEMIA:-6001}
+      AI_SERVICE_URL: http://ai-service:${PORT_AI:-6002}
+      CONTENT_SERVICE_URL: http://content-service:${PORT_CONTENT:-6003}
+      ANALYTICS_SERVICE_URL: http://analytics-service:${PORT_ANALYTICS:-6004}
+      USERS_SERVICE_URL: http://users-service:${PORT_USERS:-6005}
+      NOTIFICATIONS_SERVICE_URL: http://notifications-service:${PORT_NOTIFICATIONS:-6006}
+    ports: ["${PORT_GATEWAY:-6080}:${PORT_GATEWAY:-6080}"]
+    depends_on:
+      academia-service: { condition: service_healthy }
+      ai-service: { condition: service_healthy }
+      content-service: { condition: service_healthy }
+      analytics-service: { condition: service_healthy }
+      users-service: { condition: service_healthy }
+      notifications-service: { condition: service_healthy }
+    mem_limit: 512m
+    cpus: 2.0
+    healthcheck:
+      <<: *backend-healthcheck
+      start_period: 15s
+
+  frontend-academia:
+    image: academia-final/frontend-academia:local
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.frontend
+      args:
+        FRONTEND: frontend-academia
+        VITE_API_URL: ${API_PUBLIC_URL:-http://localhost:6080}
+    restart: unless-stopped
+    init: true
+    pids_limit: 96
+    logging: &frontend-logging
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+    ports: ["${PORT_FRONTEND_ACADEMIA:-6007}:8080"]
+    networks: [academia-interna]
+    depends_on: { api-gateway: { condition: service_healthy } }
+    mem_limit: 64m
+    cpus: 0.5
+
+  frontend-administracion:
+    image: academia-final/frontend-administracion:local
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.frontend
+      args:
+        FRONTEND: frontend-administracion
+        VITE_API_URL: ${API_PUBLIC_URL:-http://localhost:6080}
+        VITE_PORTAL_URL: ${PORTAL_PUBLIC_URL:-}
+    restart: unless-stopped
+    init: true
+    pids_limit: 96
+    logging: *frontend-logging
+    ports: ["${PORT_FRONTEND_ADMIN:-6008}:8080"]
+    networks: [academia-interna]
+    depends_on: { api-gateway: { condition: service_healthy } }
+    mem_limit: 64m
+    cpus: 0.5
+
+  redis:
+    profiles: ["redis"]
+    image: redis:8.6-alpine
+    restart: unless-stopped
+    pids_limit: 96
+    logging: *frontend-logging
+    networks: [academia-interna]
+    command: ["redis-server", "--appendonly", "no", "--save", "", "--maxmemory", "512mb", "--maxmemory-policy", "allkeys-lru"]
+    mem_limit: 640m
+    cpus: 1.0
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+networks:
+  academia-interna:
+    driver: bridge
+
+volumes:
+  # Archivos multimedia de la plataforma; MySQL permanece fuera de Docker.
+  academia-media:
+  # Evidencias de tickets; no se pierden al reconstruir notifications-service.
+  academia-support:

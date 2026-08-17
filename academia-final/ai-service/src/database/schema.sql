@@ -1,0 +1,9 @@
+-- Catálogo del esquema vigente del servicio ai-service.
+-- La definición ejecutable se mantiene en los modelos Sequelize y migraciones del servicio.
+-- ia_asistentes
+-- ia_asistentes_tutores
+-- ia_bases_conocimiento_rag
+-- ia_documentos_rag
+-- ia_mensajes_chat
+-- ia_plantillas_prompts
+-- ia_sesiones_chat

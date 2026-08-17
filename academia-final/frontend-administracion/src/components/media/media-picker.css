@@ -1,0 +1,63 @@
+.media-picker-upload {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 15px;
+  border: 2px dashed #cbb9ba;
+  border-radius: 10px;
+  background: #fffafa;
+  cursor: pointer;
+}
+
+.media-picker-upload:hover,
+.media-picker-upload.is-uploading {
+  border-color: var(--wine);
+  background: #fbf0f0;
+}
+
+.media-picker-upload > svg {
+  flex: 0 0 25px;
+  color: var(--wine);
+}
+
+.media-picker-upload > span {
+  display: grid;
+  gap: 2px;
+}
+
+.media-picker-upload strong {
+  font-size: .8rem;
+}
+
+.media-picker-upload small {
+  color: var(--muted);
+  font-size: .68rem;
+}
+
+.media-picker-upload input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.media-picker-upload.is-uploading input {
+  cursor: wait;
+}
+
+.blog-create-cover {
+  display: grid;
+  gap: 8px;
+}
+
+.blog-create-cover > span {
+  font-size: .76rem;
+  font-weight: 800;
+}
+
+.blog-create-cover .capsule-editor-image {
+  min-height: 150px;
+}

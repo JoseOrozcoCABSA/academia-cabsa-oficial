@@ -1,0 +1,46 @@
+.scholarship-manager{max-width:1600px;padding-bottom:55px}.code-metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}.code-metrics>div{display:flex;align-items:center;gap:12px;padding:17px}.code-metrics svg{width:27px;color:var(--wine)}.code-metrics span{display:grid}.code-metrics strong{font-size:1.45rem}.code-metrics small{color:var(--muted)}.code-tabs{display:flex;gap:6px;margin-bottom:16px;padding:7px;border:1px solid var(--line);border-radius:12px;background:#fff;overflow:auto}.code-tabs button{border:0;border-radius:8px;background:transparent;padding:10px 14px;color:#646b65;font-size:.8rem;font-weight:850;white-space:nowrap}.code-tabs button.active{background:var(--wine);color:#fff}
+.code-filters{display:flex;align-items:end;flex-wrap:wrap;gap:10px;margin-bottom:14px;padding:16px}.code-filters label{display:grid;flex:1;min-width:150px;gap:5px}.code-filters label>span,.code-import-form label>span,.code-edit-modal label>span,.cleanup-form label>span,.danger-confirm>span{font-size:.72rem;font-weight:850;color:#606761;text-transform:uppercase}.code-filters input,.code-filters select,.code-import-form input,.code-import-form select,.code-edit-modal input,.code-edit-modal select,.code-edit-modal textarea,.group-search input,.group-search select,.group-expiry input,.cleanup-form input,.cleanup-form select,.danger-confirm input{width:100%;height:42px;border:1px solid #cbd0ca;border-radius:8px;background:#fff;padding:0 11px;outline:0}.code-filters>div{display:flex;gap:6px}.code-table{padding:0;overflow:auto}.code-table>header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--line)}.code-table>header h2{margin:0}.code-table table{min-width:1050px}.code-table td{vertical-align:middle}.code-table td>strong,.code-table td>span,.code-table td>small{display:block}.code-table td small{margin-top:3px;color:var(--muted);font-size:.68rem}.code-mono{font-family:Consolas,monospace;color:var(--wine);white-space:nowrap}.code-row-actions{display:flex;gap:5px}.code-row-actions button{display:grid;width:31px;height:31px;place-items:center;border:0;border-radius:6px;background:#edf0ec;color:#4f5750}.code-row-actions button.danger{background:#fae7e8;color:#9b1d23}.code-row-actions svg{width:15px}.code-pagination{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:14px}.code-pagination span{font-size:.78rem;color:var(--muted)}
+.code-import-layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(350px,.75fr);gap:16px}.code-import-form>header{display:flex;gap:12px;margin-bottom:16px}.code-import-form>header svg{color:var(--wine)}.code-import-form h2,.code-import-form p{margin:0}.code-import-form p{margin-top:4px;font-size:.8rem}.code-import-form>textarea{width:100%;resize:vertical;border:1px solid #cbd0ca;border-radius:9px;padding:13px;font:13px/1.6 Consolas,monospace}.code-form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.code-form-grid label{display:grid;gap:6px;margin:0}.code-import-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.validation-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.validation-summary span{display:grid;padding:10px;border-radius:8px;background:#f1f2ef;text-align:center;font-size:.68rem}.validation-summary strong{font-size:1.2rem}.validation-summary .green{background:#e7f5ec;color:#27704d}.validation-summary .gold{background:#fff3d2;color:#896200}.validation-summary .red{background:#fae8e9;color:#982127}.validation-list{max-height:330px;overflow:auto;padding-left:19px;font-size:.75rem;line-height:1.6}.validation-list .error{color:#9c2429}
+.code-edit-modal{width:min(780px,100%)}.group-search{display:grid;grid-template-columns:minmax(260px,1fr) minmax(190px,.7fr) 180px auto;align-items:end;gap:10px}.group-search h2,.group-search p{margin:0}.group-search p{margin-top:5px;font-size:.78rem}.group-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:15px 0}.group-stats>div{display:grid;padding:17px;border:1px solid var(--line);border-radius:10px;background:#fff}.group-stats strong{font-size:1.5rem;color:var(--wine)}.group-stats span{font-size:.75rem;color:var(--muted)}.group-expiry{display:grid;grid-template-columns:1fr 190px auto;align-items:center;gap:12px;margin-bottom:15px}.group-expiry h2,.group-expiry p{margin:0}.group-expiry p{margin-top:4px;font-size:.78rem}.group-manager .code-table{margin-top:15px}
+.cleanup-layout{display:grid;gap:16px}.cleanup-form{display:grid;grid-template-columns:42px minmax(260px,1fr) minmax(190px,.7fr) 170px auto;align-items:end;gap:12px}.cleanup-form>svg{align-self:start;width:30px;color:#b67d00}.cleanup-form h2,.cleanup-form p{margin:0}.cleanup-form p{margin-top:5px;font-size:.78rem}.cleanup-form label{display:grid;gap:6px}.cleanup-preview>header{display:flex;align-items:start;justify-content:space-between}.cleanup-preview h2,.cleanup-preview p{margin:0}.cleanup-preview p{margin-top:4px}.cleanup-codes{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;max-height:360px;overflow:auto;margin:16px 0}.cleanup-codes span{display:grid;padding:9px;border:1px solid var(--line);border-radius:7px}.cleanup-codes small{overflow:hidden;color:var(--muted);font-size:.66rem;text-overflow:ellipsis}.danger-confirm{display:grid;gap:6px;margin:16px 0;padding:14px;border-radius:9px;background:#fff2f2}.danger-confirm input{border-color:#d49a9d}
+@media(max-width:1200px){.code-metrics{grid-template-columns:repeat(3,1fr)}.code-import-layout{grid-template-columns:1fr}.group-search,.cleanup-form{grid-template-columns:1fr 1fr}.group-search>div,.cleanup-form>div{grid-column:1/-1}.cleanup-form>svg{display:none}.cleanup-codes{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:750px){.code-metrics{grid-template-columns:1fr 1fr}.code-form-grid,.group-stats,.group-expiry,.group-search,.cleanup-form{grid-template-columns:1fr}.validation-summary{grid-template-columns:repeat(2,1fr)}.cleanup-codes{grid-template-columns:1fr 1fr}.code-pagination{flex-wrap:wrap}.code-filters>div,.code-filters>div .button{width:100%}}
+.activation-actions{display:flex;flex-wrap:wrap;gap:6px}.activation-actions .button{padding:8px 10px;font-size:.7rem}.activation-actions svg{width:15px}
+/* Perfiles de beca: reglas reutilizables de acceso y dependientes. */
+.scholarship-profiles-layout{display:grid;grid-template-columns:minmax(340px,.85fr) minmax(430px,1.15fr);gap:1rem;align-items:start}
+.scholarship-profile-form,.scholarship-profile-list{display:grid;gap:1rem}
+.scholarship-profile-form>header,.scholarship-profile-list article>header{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem}
+.scholarship-profile-form label{display:grid;gap:.4rem}
+.scholarship-profile-form fieldset{display:grid;gap:.8rem;border:1px solid var(--border-color,#dbe3ec);border-radius:.75rem;padding:1rem}
+.scholarship-profile-form legend{padding:0 .4rem;font-weight:700}
+.scholarship-profile-form .profile-check{display:flex;align-items:center;gap:.55rem}
+.scholarship-profile-form .profile-check input{width:auto}
+.profile-form-actions{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
+.profile-form-actions>a{display:inline-flex;align-items:center;gap:.4rem;font-weight:700}
+.profile-form-actions svg,.scholarship-profile-list header svg{width:1rem;height:1rem}
+.scholarship-profile-list article{display:grid;gap:.75rem}
+.scholarship-profile-list article>header button{border:0;background:transparent;cursor:pointer;padding:.35rem}
+.scholarship-profile-list article>header span,.dependent-rule span{display:block;color:var(--text-muted,#64748b);font-size:.86rem;margin-top:.2rem}
+.profile-card-stats{display:flex;gap:1rem;flex-wrap:wrap}
+.dependent-rule{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:.65rem;padding:.75rem;border-radius:.7rem;background:var(--surface-subtle,#f3f6fa)}
+.dependent-rule>svg{width:1.2rem;height:1.2rem}
+@media(max-width:1000px){.scholarship-profiles-layout{grid-template-columns:1fr}}
+.scholarship-policy-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 20px;
+  border-left: 4px solid #64748b;
+}
+
+.scholarship-policy-card.is-enabled { border-left-color: #b3262e; background: #fffafa; }
+.scholarship-policy-card.is-blocked { border-left-color: #18835a; background: #f7fcf9; }
+.scholarship-policy-card h2, .scholarship-policy-card p { margin: 0; }
+.scholarship-policy-card p:last-child { margin-top: 5px; color: #667085; }
+.scholarship-policy-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: #fff; color: #8e1e26; }
+
+@media (max-width: 760px) {
+  .scholarship-policy-card { grid-template-columns: auto 1fr; }
+  .scholarship-policy-card > button { grid-column: 1 / -1; width: 100%; }
+}

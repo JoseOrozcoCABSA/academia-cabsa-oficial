@@ -1,0 +1,27 @@
+-- Catálogo del esquema vigente del servicio users-service.
+-- La definición ejecutable se mantiene en los modelos Sequelize y migraciones del servicio.
+-- usuarios_asignaciones_roles
+-- usuarios_becas
+-- usuarios_ciudades
+-- usuarios_codigos_beca_email
+-- usuarios_codigos_postales
+-- usuarios_colonias
+-- usuarios_cuentas
+-- usuarios_cuentas_legacy
+-- usuarios_estados
+-- usuarios_fomaqro_registros
+-- usuarios_grupos
+-- usuarios_membresias
+-- usuarios_miembros_grupos
+-- usuarios_municipios
+-- usuarios_niveles_membresia
+-- usuarios_oficiales
+-- usuarios_pendientes
+-- usuarios_permisos
+-- usuarios_roles
+-- usuarios_roles_permisos
+-- usuarios_sesiones
+-- usuarios_sesiones_jwt
+-- usuarios_tokens_restablecimiento
+-- usuarios_vista_administracion
+-- usuarios_vista_control_duplicados

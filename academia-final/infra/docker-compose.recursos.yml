@@ -1,0 +1,25 @@
+services:
+  redis:
+    image: redis:7.4-alpine
+    container_name: academia-redis
+    restart: unless-stopped
+    command:
+      - redis-server
+      - --appendonly
+      - "no"
+      - --maxmemory
+      - 512mb
+      - --maxmemory-policy
+      - allkeys-lru
+    ports:
+      - "127.0.0.1:6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 640M
