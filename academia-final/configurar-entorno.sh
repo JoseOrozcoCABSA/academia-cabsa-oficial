@@ -68,5 +68,17 @@ if (( EUID == 0 )) && [[ -n "${SUDO_USER:-}" && "${SUDO_USER}" != root ]]; then
   owner_group="$(id -gn "${SUDO_USER}")"
   chown "${SUDO_USER}:${owner_group}" "${ENV_FILE}" 2>/dev/null || true
 fi
+
+# El dominio solo cambia URLs publicas; DB_HOST y DB_PORT de MySQL se conservan.
+public_domain="${PUBLIC_DOMAIN:-}"
+if [[ -n "${public_domain}" ]]; then
+  set_env PUBLIC_DOMAIN "${public_domain}"
+  set_env API_PUBLIC_URL "https://${public_domain}:9443"
+  set_env PORTAL_PUBLIC_URL "https://${public_domain}"
+  set_env FRONTEND_URL "https://${public_domain}"
+  set_env CORS_ORIGINS "https://${public_domain},https://${public_domain}:8443"
+  set_env TRUST_PROXY_HOPS "1"
+  echo "OK: URLs publicas configuradas para ${public_domain}."
+fi
 chmod 600 "${ENV_FILE}" 2>/dev/null || true
 echo "OK: configuración preparada en ${ENV_FILE}."

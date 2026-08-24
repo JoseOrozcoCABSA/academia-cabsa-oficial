@@ -4,18 +4,29 @@ set -uo pipefail
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 declare -a names=() results=() codes=()
 enable_redis=0
+domain=""
 
 for argument in "$@"; do
   case "${argument}" in
     --con-redis) enable_redis=1 ;;
+    --dominio=*) domain="${argument#*=}" ;;
     -h|--help)
-      echo "Uso: bash ejecutar-todo.sh [--con-redis]"
+      echo "Uso: bash ejecutar-todo.sh [--con-redis] [--dominio=academia.ejemplo.com]"
       echo "Redis se omite por defecto. --con-redis inicia el contenedor privado para probarlo."
+      echo "--dominio configura URLs y proxy HTTPS; MySQL conserva DB_HOST del .env."
       exit 0
       ;;
     *) echo "ERROR: opción desconocida: ${argument}" >&2; exit 2 ;;
   esac
 done
+
+if [[ -n "${domain}" ]]; then
+  if [[ ! "${domain}" =~ ^([A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$ ]]; then
+    echo "ERROR: dominio no valido: ${domain}" >&2
+    exit 2
+  fi
+  export PUBLIC_DOMAIN="${domain,,}"
+fi
 
 echo "===== 0. Preparar configuración ====="
 if ! bash "${ROOT}/configurar-entorno.sh"; then
@@ -44,6 +55,9 @@ if (( enable_redis == 1 )); then
   echo "INFO: Redis se iniciara dentro de Docker Compose para esta prueba."
 else
   echo "INFO: Redis omitido. El API Gateway usara el limitador local en memoria."
+fi
+if [[ -n "${domain}" ]]; then
+  docker_arguments+=(--dominio="${PUBLIC_DOMAIN}")
 fi
 run_step "1. Crear o verificar base de datos" "crear-base-datos.sh"
 run_step "2. Crear y registrar respaldo" "crear-copia-seguridad.sh"

@@ -1,0 +1,17 @@
+services:
+  https-proxy:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on:
+      frontend-academia: { condition: service_started }
+      frontend-administracion: { condition: service_started }
+      api-gateway: { condition: service_healthy }
+    ports: ["443:443", "8443:8443", "9443:9443"]
+    networks: [academia-interna]
+    volumes:
+      - ./infra/nginx-dns.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./certificados/academia-local.crt:/etc/nginx/tls/academia.crt:ro
+      - ./certificados/academia-local.key:/etc/nginx/tls/academia.key:ro
+    mem_limit: 96m
+    cpus: 0.5
+

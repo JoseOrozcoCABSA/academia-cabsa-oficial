@@ -5,11 +5,13 @@ ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 cd -- "${ROOT}"
 
 enable_redis=0
+domain=""
 for argument in "$@"; do
   case "${argument}" in
     --con-redis) enable_redis=1 ;;
+    --dominio=*) domain="${argument#*=}" ;;
     -h|--help)
-      echo "Uso: bash ejecutar-docker.sh [--con-redis]"
+      echo "Uso: bash ejecutar-docker.sh [--con-redis] [--dominio=academia.ejemplo.com]"
       echo "Redis se omite por defecto. --con-redis inicia el perfil redis."
       exit 0
       ;;
@@ -44,6 +46,12 @@ else
       echo "AVISO: no fue posible detener Redis; se continuara con los demas servicios." >&2
     fi
   fi
+fi
+if [[ -n "${domain}" ]]; then
+  [[ -f docker-compose.https.yml ]] || { echo "ERROR: falta docker-compose.https.yml" >&2; exit 1; }
+  bash "${ROOT}/scripts/generar-certificado-local.sh" "${domain}"
+  compose+=( -f docker-compose.https.yml )
+  echo "INFO: proxy HTTPS para ${domain}; MySQL conserva DB_HOST del .env."
 fi
 up_options=(-d --build --remove-orphans)
 if "${DOCKER[@]}" compose up --help 2>/dev/null | grep -q -- '--wait'; then
