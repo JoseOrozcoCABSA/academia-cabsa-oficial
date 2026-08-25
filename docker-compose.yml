@@ -27,7 +27,7 @@ x-backend: &backend
     JWT_SECRET: ${JWT_SECRET:?Configura JWT_SECRET en .env}
     JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-8h}
     INTERNAL_SERVICE_KEY: ${INTERNAL_SERVICE_KEY:?Configura INTERNAL_SERVICE_KEY en .env}
-    CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:6007,http://localhost:6008}
+    CORS_ORIGINS: ${CORS_ORIGINS:-https://usuarios.academiacabsa.com,https://administracion.academiacabsa.com}
 
 x-healthcheck: &backend-healthcheck
   test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:'+process.env.PORT+'/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
@@ -78,7 +78,7 @@ services:
       NODE_OPTIONS: --max-old-space-size=768
       MEDIA_STORAGE_PATH: ${MEDIA_STORAGE_PATH:-runtime-media}
       MEDIA_MAX_FILE_MB: ${MEDIA_MAX_FILE_MB:-25}
-      PUBLIC_API_URL: ${API_PUBLIC_URL:-http://localhost:6080}
+      PUBLIC_API_URL: ${API_PUBLIC_URL:-https://api.academiacabsa.com}
     expose: ["${PORT_CONTENT:-6003}"]
     volumes: ["academia-media:/app/runtime-media"]
     mem_limit: 1024m
@@ -120,7 +120,7 @@ services:
       SERVICE_NAME: users-service
       NODE_OPTIONS: --max-old-space-size=512
       INTERNAL_SERVICE_KEY: ${INTERNAL_SERVICE_KEY:?Configura INTERNAL_SERVICE_KEY en .env}
-      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:6007}
+      FRONTEND_URL: ${FRONTEND_URL:-https://usuarios.academiacabsa.com}
       NOTIFICATIONS_SERVICE_URL: ${NOTIFICATIONS_SERVICE_URL:-http://notifications-service:6006}
     expose: ["${PORT_USERS:-6005}"]
     depends_on: { notifications-service: { condition: service_healthy } }
@@ -177,7 +177,7 @@ services:
       ANALYTICS_SERVICE_URL: ${ANALYTICS_SERVICE_URL:-http://analytics-service:6004}
       USERS_SERVICE_URL: ${USERS_SERVICE_URL:-http://users-service:6005}
       NOTIFICATIONS_SERVICE_URL: ${NOTIFICATIONS_SERVICE_URL:-http://notifications-service:6006}
-    ports: ["${PORT_GATEWAY:-6080}:${PORT_GATEWAY:-6080}"]
+    expose: ["${PORT_GATEWAY:-6080}"]
     depends_on:
       academia-service: { condition: service_healthy }
       ai-service: { condition: service_healthy }
@@ -198,14 +198,14 @@ services:
       dockerfile: infra/Dockerfile.frontend
       args:
         FRONTEND: frontend-academia
-        VITE_API_URL: ${API_PUBLIC_URL:-http://localhost:6080}
+        VITE_API_URL: ${API_PUBLIC_URL:-https://api.academiacabsa.com}
     restart: unless-stopped
     init: true
     pids_limit: 96
     logging: &frontend-logging
       driver: json-file
       options: { max-size: "10m", max-file: "3" }
-    ports: ["${PORT_FRONTEND_ACADEMIA:-6007}:8080"]
+    expose: ["8080"]
     networks: [academia-interna]
     depends_on: { api-gateway: { condition: service_healthy } }
     mem_limit: 64m
@@ -218,13 +218,13 @@ services:
       dockerfile: infra/Dockerfile.frontend
       args:
         FRONTEND: frontend-administracion
-        VITE_API_URL: ${API_PUBLIC_URL:-http://localhost:6080}
-        VITE_PORTAL_URL: ${PORTAL_PUBLIC_URL:-}
+        VITE_API_URL: ${API_PUBLIC_URL:-https://api.academiacabsa.com}
+        VITE_PORTAL_URL: ${PORTAL_PUBLIC_URL:-https://usuarios.academiacabsa.com}
     restart: unless-stopped
     init: true
     pids_limit: 96
     logging: *frontend-logging
-    ports: ["${PORT_FRONTEND_ADMIN:-6008}:8080"]
+    expose: ["8080"]
     networks: [academia-interna]
     depends_on: { api-gateway: { condition: service_healthy } }
     mem_limit: 64m

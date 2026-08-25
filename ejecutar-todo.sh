@@ -10,15 +10,15 @@ server_ip=""
 for argument in "$@"; do
   case "${argument}" in
     --con-redis) enable_redis=1 ;;
-    --dominio=*) domain="${argument#*=}" ;;
-    --ip-servidor=*) server_ip="${argument#*=}" ;;
-    --detectar-ip) server_ip="auto" ;;
+    --dominio=*) domain="${argument#*=}"; server_ip=""; export DNS_ACTIVO=true ;;
+    --ip-servidor=*) server_ip="${argument#*=}"; export DNS_ACTIVO=false ;;
+    --detectar-ip) server_ip="auto"; export DNS_ACTIVO=false ;;
     -h|--help)
-      echo "Uso: bash ejecutar-todo.sh [--con-redis] [--detectar-ip | --ip-servidor=172.16.17.2 | --dominio=academia.ejemplo.com]"
+      echo "Uso: bash ejecutar-todo.sh [--con-redis] [--ip-servidor=172.16.17.2 | --dominio=academia.ejemplo.com]"
       echo "Redis se omite por defecto. --con-redis inicia el contenedor privado para probarlo."
       echo "--dominio configura URLs y proxy HTTPS; MySQL conserva DB_HOST del .env."
       echo "--ip-servidor configura las URLs con la IP interna y tiene prioridad sobre --dominio."
-      echo "--detectar-ip obtiene automáticamente la IP de la ruta principal del servidor."
+      echo "Sin argumentos respeta DNS_ACTIVO del .env; false detecta la IP de Ubuntu."
       exit 0
       ;;
     *) echo "ERROR: opción desconocida: ${argument}" >&2; exit 2 ;;
@@ -31,6 +31,9 @@ if [[ -n "${domain}" ]]; then
     exit 2
   fi
   export PUBLIC_DOMAIN="${domain,,}"
+  export DNS_PORTAL_HOST="usuarios.${PUBLIC_DOMAIN}"
+  export DNS_ADMIN_HOST="administracion.${PUBLIC_DOMAIN}"
+  export DNS_API_HOST="api.${PUBLIC_DOMAIN}"
 fi
 if [[ -n "${server_ip}" ]]; then
   export SERVER_IP="${server_ip}"

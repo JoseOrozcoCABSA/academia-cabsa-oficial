@@ -22,6 +22,14 @@ done
 [[ -f .env ]] || { echo "ERROR: no existe ${ROOT}/.env" >&2; exit 1; }
 command -v docker >/dev/null 2>&1 || { echo "ERROR: Docker no esta instalado" >&2; exit 1; }
 
+read_env_value() {
+  local value
+  value="$(sed -n "s/^$1=//p" .env | tail -n 1 | tr -d '\r')"
+  value="${value%\"}"; value="${value#\"}"
+  value="${value%\'}"; value="${value#\'}"
+  printf '%s' "${value}"
+}
+
 if docker info >/dev/null 2>&1; then
   DOCKER=(docker)
 elif command -v sudo >/dev/null 2>&1 && sudo docker info >/dev/null 2>&1; then
@@ -34,12 +42,12 @@ fi
 "${DOCKER[@]}" compose version >/dev/null
 if (( enable_redis == 1 )); then
   export REDIS_URL="${REDIS_URL:-redis://redis:6379}"
-  compose=("${DOCKER[@]}" compose --env-file .env --profile redis)
+  compose=("${DOCKER[@]}" compose --env-file .env -f docker-compose.yml --profile redis)
 else
   # La variable del proceso prevalece sobre .env y fuerza el modo sin Redis.
   export REDIS_URL=""
-  compose=("${DOCKER[@]}" compose --env-file .env)
-  redis_compose=("${DOCKER[@]}" compose --env-file .env --profile redis)
+  compose=("${DOCKER[@]}" compose --env-file .env -f docker-compose.yml)
+  redis_compose=("${DOCKER[@]}" compose --env-file .env -f docker-compose.yml --profile redis)
   if [[ -n "$("${redis_compose[@]}" ps -q redis 2>/dev/null || true)" ]]; then
     echo "Deteniendo el contenedor Redis existente mientras su uso esta pospuesto..."
     if ! "${redis_compose[@]}" stop redis; then
@@ -47,11 +55,27 @@ else
     fi
   fi
 fi
-if [[ -n "${domain}" ]]; then
-  [[ -f docker-compose.https.yml ]] || { echo "ERROR: falta docker-compose.https.yml" >&2; exit 1; }
-  bash "${ROOT}/scripts/generar-certificado-local.sh" "${domain}"
-  compose+=( -f docker-compose.https.yml )
-  echo "INFO: proxy HTTPS para ${domain}; MySQL conserva DB_HOST del .env."
+dns_active="$(read_env_value DNS_ACTIVO)"
+declare -a certificate_hosts=()
+if [[ "${dns_active,,}" == "true" ]]; then
+  certificate_hosts+=("$(read_env_value DNS_PORTAL_HOST)")
+  certificate_hosts+=("$(read_env_value DNS_ADMIN_HOST)")
+  certificate_hosts+=("$(read_env_value DNS_API_HOST)")
+  proxy_compose_file="docker-compose.dns.yml"
+else
+  public_host="$(read_env_value SERVER_IP)"
+  [[ "${public_host}" == "auto" ]] && public_host=""
+  certificate_hosts+=("${public_host}")
+  proxy_compose_file="docker-compose.https.yml"
+fi
+if [[ -n "${certificate_hosts[0]}" ]]; then
+  [[ -f "${proxy_compose_file}" ]] || { echo "ERROR: falta ${proxy_compose_file}" >&2; exit 1; }
+  bash "${ROOT}/scripts/generar-certificado-local.sh" "${certificate_hosts[@]}"
+  compose+=( -f "${proxy_compose_file}" )
+  echo "INFO: proxy HTTPS para ${certificate_hosts[*]}; MySQL conserva DB_HOST del .env."
+else
+  echo "ERROR: no se encontro una IP o configuracion DNS valida en .env para iniciar HTTPS." >&2
+  exit 2
 fi
 up_options=(-d --build --remove-orphans)
 if "${DOCKER[@]}" compose up --help 2>/dev/null | grep -q -- '--wait'; then

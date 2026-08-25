@@ -6,8 +6,6 @@ ENV_FILE="${CONFIG_ENV_FILE:-${ROOT}/.env}"
 [[ "${ENV_FILE}" = /* ]] || ENV_FILE="${ROOT}/${ENV_FILE}"
 EXAMPLE_FILE="${ROOT}/.env.example"
 
-[[ -f "${EXAMPLE_FILE}" ]] || { echo "ERROR: no existe ${EXAMPLE_FILE}" >&2; exit 1; }
-
 read_env() {
   local value
   value="$(sed -n "s/^$1=//p" "${ENV_FILE}" 2>/dev/null | tail -n 1 | tr -d '\r')"
@@ -50,6 +48,10 @@ detect_server_ip() {
 }
 
 if [[ ! -f "${ENV_FILE}" ]]; then
+  [[ -f "${EXAMPLE_FILE}" ]] || {
+    echo "ERROR: no existe ${ENV_FILE} ni la plantilla ${EXAMPLE_FILE}." >&2
+    exit 1
+  }
   cp -- "${EXAMPLE_FILE}" "${ENV_FILE}"
   echo "OK: se creó ${ENV_FILE} desde .env.example."
 fi
@@ -85,16 +87,44 @@ if (( EUID == 0 )) && [[ -n "${SUDO_USER:-}" && "${SUDO_USER}" != root ]]; then
   chown "${SUDO_USER}:${owner_group}" "${ENV_FILE}" 2>/dev/null || true
 fi
 
-# El host publico solo cambia URLs publicas; DB_HOST y DB_PORT se conservan.
-# SERVER_IP tiene prioridad para instalaciones internas sin DNS.
-server_ip="${SERVER_IP:-}"
-public_domain="${PUBLIC_DOMAIN:-}"
-if [[ "${server_ip}" == "auto" ]]; then
-  server_ip="$(detect_server_ip)" || exit 2
-  echo "OK: IP interna detectada: ${server_ip}."
-fi
-public_host="${server_ip:-${public_domain}}"
-if [[ -n "${server_ip}" ]]; then
+# Solo cambia URLs publicas; las conexiones internas y DB_HOST se conservan.
+dns_active="${DNS_ACTIVO:-$(read_env DNS_ACTIVO)}"
+dns_active="$(printf '%s' "${dns_active}" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')"
+case "${dns_active}" in
+  true|1|yes|si|sí) dns_active="true" ;;
+  false|0|no|"") dns_active="false" ;;
+  *)
+    echo "ERROR: DNS_ACTIVO debe ser true o false (valor recibido: ${dns_active})." >&2
+    exit 2
+    ;;
+esac
+set_env DNS_ACTIVO "${dns_active}"
+
+if [[ "${dns_active}" == "true" ]]; then
+  portal_host="${DNS_PORTAL_HOST:-$(read_env DNS_PORTAL_HOST)}"
+  admin_host="${DNS_ADMIN_HOST:-$(read_env DNS_ADMIN_HOST)}"
+  api_host="${DNS_API_HOST:-$(read_env DNS_API_HOST)}"
+  [[ -n "${portal_host}" && -n "${admin_host}" && -n "${api_host}" ]] || {
+    echo "ERROR: configura DNS_PORTAL_HOST, DNS_ADMIN_HOST y DNS_API_HOST en .env." >&2
+    exit 2
+  }
+  set_env PUBLIC_DOMAIN "${portal_host}"
+  set_env DNS_CORS_ORIGINS "https://${portal_host},https://${admin_host}"
+  set_env DNS_API_PUBLIC_URL "https://${api_host}"
+  set_env DNS_PORTAL_PUBLIC_URL "https://${portal_host}"
+  set_env DNS_FRONTEND_URL "https://${portal_host}"
+  set_env CORS_ORIGINS "https://${portal_host},https://${admin_host}"
+  set_env API_PUBLIC_URL "https://${api_host}"
+  set_env PORTAL_PUBLIC_URL "https://${portal_host}"
+  set_env FRONTEND_URL "https://${portal_host}"
+  public_host="${portal_host}"
+  echo "OK: modo DNS activo: portal=${portal_host}, admin=${admin_host}, api=${api_host}."
+else
+  server_ip="${SERVER_IP:-auto}"
+  if [[ "${server_ip}" == "auto" ]]; then
+    server_ip="$(detect_server_ip)" || exit 2
+    echo "OK: IP interna detectada: ${server_ip}."
+  fi
   if [[ ! "${server_ip}" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
     echo "ERROR: IP interna no valida: ${server_ip}" >&2
     exit 2
@@ -104,15 +134,13 @@ if [[ -n "${server_ip}" ]]; then
     (( octet >= 0 && octet <= 255 )) || { echo "ERROR: IP interna no valida: ${server_ip}" >&2; exit 2; }
   done
   set_env SERVER_IP "${server_ip}"
+  public_host="${server_ip}"
+  set_env API_PUBLIC_URL "https://${server_ip}:9443"
+  set_env PORTAL_PUBLIC_URL "https://${server_ip}:6007"
+  set_env FRONTEND_URL "https://${server_ip}:6007"
+  set_env CORS_ORIGINS "https://${server_ip}:6007,https://${server_ip}:6008"
+  echo "OK: modo IP activo; URLs publicas configuradas para ${server_ip}."
 fi
-if [[ -n "${public_host}" ]]; then
-  [[ -z "${public_domain}" ]] || set_env PUBLIC_DOMAIN "${public_domain}"
-  set_env API_PUBLIC_URL "https://${public_host}:9443"
-  set_env PORTAL_PUBLIC_URL "https://${public_host}"
-  set_env FRONTEND_URL "https://${public_host}"
-  set_env CORS_ORIGINS "https://${public_host},https://${public_host}:8443"
-  set_env TRUST_PROXY_HOPS "1"
-  echo "OK: URLs publicas configuradas para ${public_host}."
-fi
+set_env TRUST_PROXY_HOPS "1"
 chmod 600 "${ENV_FILE}" 2>/dev/null || true
 echo "OK: configuración preparada en ${ENV_FILE}."

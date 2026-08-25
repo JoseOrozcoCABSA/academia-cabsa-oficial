@@ -10,7 +10,8 @@ services:
       PORTAL_HOST: ${DNS_PORTAL_HOST:-usuarios.academiacabsa.com}
       ADMIN_HOST: ${DNS_ADMIN_HOST:-administracion.academiacabsa.com}
       API_HOST: ${DNS_API_HOST:-api.academiacabsa.com}
-    ports: ["6007:443", "6008:8443", "9443:9443"]
+    # Apache del host conserva el puerto 80; este proxy termina HTTPS en 443.
+    ports: ["443:443"]
     networks: [academia-interna]
     volumes:
       - ./infra/nginx-dns.conf:/etc/nginx/templates/default.conf.template:ro
