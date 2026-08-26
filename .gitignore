@@ -1,56 +1,43 @@
-# Configuración local y secretos. Sólo se versiona la plantilla segura.
+# Configuración local y secretos
 .env
 .env.*
 !.env.example
+**/.env
 
 # Dependencias y compilados reproducibles
 **/node_modules/
 **/dist/
 **/*.tsbuildinfo
 
-# Registros de ejecucion (pueden contener datos personales)
+# Registros de ejecución
 **/*.log
 runtime-logs/
 frontend-logs/
+runtime-pids/
 **/runtime-media/
 .runtime/
-#database-backups/
 
-# Archivos locales del sistema y herramientas
-.DS_Store
-Thumbs.db
-.codebase-memory/
-
-
-
-**/.env
-**/node_modules/
-**/dist/
-runtime-logs/
-runtime-pids/
-database/backups/
-
-# Herramientas, memoria y asistentes locales de IA
-.codebase-memory/
-.opencode/
-.claude/
-.codex/
-.cursor/
-.windsurf/
-*.prompt
-*.chat
-
-# Documentacion, reportes y notas generadas localmente
-*.md
-*.mdx
-*.markdown
-
-# Respaldos y datos locales
+# Respaldos
 database-backups/
+database/backups/
+mysql/backups/
+
+# Ignorar SQL comprimidos, dumps y respaldos
 *.sql.gz
 *.dump
 *.bak
-# Copias exportadas en la raiz; los schemas y migrations del codigo se conservan.
+
+# =========================================================
+# MYSQL - SOLO VERSION INICIAL
+# =========================================================
+
+# Permitir únicamente los .sql dentro de mysql/inicial
+!mysql/inicial/
+!mysql/inicial/*.sql
+
+# =========================================================
+
+# Copias exportadas en la raíz
 /academia_matematicas_*.sql
 
 # Certificados locales y llaves privadas
@@ -62,7 +49,22 @@ certificados/
 *.p12
 *.pfx
 
-# Resultados, temporales y carpetas de trabajo
+# Herramientas y asistentes locales
+.codebase-memory/
+.opencode/
+.claude/
+.codex/
+.cursor/
+.windsurf/
+*.prompt
+*.chat
+
+# Documentación y notas locales
+*.md
+*.mdx
+*.markdown
+
+# Resultados y temporales
 coverage/
 .nyc_output/
 test-results/
@@ -77,13 +79,8 @@ temp/
 *~
 *.txt
 
-
-
-# Archivos locales del sistema y editores
+# Sistema operativo y editores
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
-
-
-

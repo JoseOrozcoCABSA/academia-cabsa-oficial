@@ -13,12 +13,21 @@ for argument in "$@"; do
     --dominio=*) domain="${argument#*=}"; server_ip=""; export DNS_ACTIVO=true ;;
     --ip-servidor=*) server_ip="${argument#*=}"; export DNS_ACTIVO=false ;;
     --detectar-ip) server_ip="auto"; export DNS_ACTIVO=false ;;
+    --sin-https) export HTTPS_ACTIVO=false ;;
+    --con-https) export HTTPS_ACTIVO=true ;;
+    --mysql-docker) export MYSQL_DOCKER_ACTIVO=true ;;
+    --mysql-externo=*)
+      export MYSQL_DOCKER_ACTIVO=false
+      export MYSQL_HOST_EXTERNO="${argument#*=}"
+      ;;
     -h|--help)
       echo "Uso: bash ejecutar-todo.sh [--con-redis] [--ip-servidor=172.16.17.2 | --dominio=academia.ejemplo.com]"
       echo "Redis se omite por defecto. --con-redis inicia el contenedor privado para probarlo."
-      echo "--dominio configura URLs y proxy HTTPS; MySQL conserva DB_HOST del .env."
+      echo "--dominio configura URLs y proxy HTTPS; MySQL conserva su configuración del .env."
       echo "--ip-servidor configura las URLs con la IP interna y tiene prioridad sobre --dominio."
       echo "Sin argumentos respeta DNS_ACTIVO del .env; false detecta la IP de Ubuntu."
+      echo "--sin-https publica HTTP directamente y no genera certificados; --con-https activa TLS."
+      echo "--mysql-docker usa MySQL privado; --mysql-externo=192.168.0.6 usa otra maquina."
       exit 0
       ;;
     *) echo "ERROR: opción desconocida: ${argument}" >&2; exit 2 ;;

@@ -1,0 +1,12 @@
+services:
+  api-gateway:
+    ports:
+      - "${PORT_GATEWAY:-6080}:${PORT_GATEWAY:-6080}"
+
+  frontend-academia:
+    ports:
+      - "${PORT_FRONTEND_ACADEMIA:-6007}:8080"
+
+  frontend-administracion:
+    ports:
+      - "${PORT_FRONTEND_ADMIN:-6008}:8080"

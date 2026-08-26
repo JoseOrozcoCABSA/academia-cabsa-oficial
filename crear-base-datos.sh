@@ -15,26 +15,40 @@ read_env() {
   printf '%s' "${value}"
 }
 
-DB_HOST="$(read_env DB_HOST)"
+MYSQL_HOST_EXTERNO="$(read_env MYSQL_HOST_EXTERNO)"
 DB_PORT="$(read_env DB_PORT)"
 DB_NAME="$(read_env DB_NAME)"
 SOURCE_DB_NAME="$(read_env SOURCE_DB_NAME)"
 SOURCE_DB_NAME="${SOURCE_DB_NAME:-academia_cabsa}"
 DB_USER="$(read_env DB_USER)"
 DB_PASSWORD="$(read_env DB_PASSWORD)"
+MYSQL_DOCKER_ACTIVO="$(read_env MYSQL_DOCKER_ACTIVO)"
 
-[[ -n "${DB_HOST}" && -n "${DB_PORT}" && -n "${DB_NAME}" && -n "${DB_USER}" ]] || {
-  echo "ERROR: completa DB_HOST, DB_PORT, DB_NAME y DB_USER en .env" >&2; exit 1;
+[[ -n "${DB_PORT}" && -n "${DB_NAME}" && -n "${DB_USER}" ]] || {
+  echo "ERROR: completa DB_PORT, DB_NAME y DB_USER en .env" >&2; exit 1;
+}
+[[ "${MYSQL_DOCKER_ACTIVO,,}" == "true" || -n "${MYSQL_HOST_EXTERNO}" ]] || {
+  echo "ERROR: define MYSQL_HOST_EXTERNO cuando MYSQL_DOCKER_ACTIVO=false" >&2; exit 1;
 }
 [[ "${DB_NAME}" =~ ^[A-Za-z0-9_-]+$ ]] || { echo "ERROR: DB_NAME no es valido" >&2; exit 1; }
 [[ "${SOURCE_DB_NAME}" =~ ^[A-Za-z0-9_-]+$ ]] || { echo "ERROR: SOURCE_DB_NAME no es valido" >&2; exit 1; }
 
-docker_host="${DB_HOST}"
+docker_host="${MYSQL_HOST_EXTERNO}"
 [[ "${docker_host}" == "127.0.0.1" || "${docker_host}" == "localhost" ]] && docker_host="host.docker.internal"
 
+if [[ "${MYSQL_DOCKER_ACTIVO,,}" == "true" ]]; then
+  compose=(docker compose --env-file "${ENV_FILE}" -f "${ROOT}/docker-compose.yml" -f "${ROOT}/docker-compose.mysql.yml")
+  (( EUID == 0 )) || docker info >/dev/null 2>&1 || compose=(sudo "${compose[@]}")
+  echo "Iniciando MySQL privado..."
+  "${compose[@]}" up -d --wait --wait-timeout 180 mysql
+fi
+
 mysql_query() {
-  if command -v mysql >/dev/null 2>&1; then
-    MYSQL_PWD="${DB_PASSWORD}" mysql --host="${DB_HOST}" --port="${DB_PORT}" --user="${DB_USER}" \
+  if [[ "${MYSQL_DOCKER_ACTIVO,,}" == "true" ]]; then
+    "${compose[@]}" exec -T -e "MYSQL_PWD=${DB_PASSWORD}" mysql \
+      mysql --host=127.0.0.1 --port="${DB_PORT}" --user="${DB_USER}" --batch --skip-column-names -e "$1"
+  elif command -v mysql >/dev/null 2>&1; then
+    MYSQL_PWD="${DB_PASSWORD}" mysql --host="${MYSQL_HOST_EXTERNO}" --port="${DB_PORT}" --user="${DB_USER}" \
       --batch --skip-column-names -e "$1"
   elif command -v docker >/dev/null 2>&1; then
     docker run --rm --add-host=host.docker.internal:host-gateway -e "MYSQL_PWD=${DB_PASSWORD}" mysql:8.4 \
@@ -44,21 +58,25 @@ mysql_query() {
   fi
 }
 
-echo "Comprobando MySQL en ${DB_HOST}:${DB_PORT}..."
+echo "Comprobando MySQL seleccionado (puerto ${DB_PORT})..."
 mysql_query "SELECT 1" >/dev/null
 mysql_query "CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
 table_count="$(mysql_query "SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA='${DB_NAME}' AND TABLE_TYPE='BASE TABLE'")"
 
 if [[ -z "${IMPORT_FILE}" && "${table_count}" -eq 0 ]]; then
-  IMPORT_FILE="$(find "${ROOT}/database-backups" -maxdepth 1 -type f -name '*.sql' -printf '%T@ %p\n' 2>/dev/null | sort -nr | head -n 1 | cut -d' ' -f2- || true)"
+  IMPORT_FILE="$(find "${ROOT}/mysql/backups" -maxdepth 1 -type f -name '*.sql' -printf '%T@ %p\n' 2>/dev/null | sort -nr | head -n 1 | cut -d' ' -f2- || true)"
 fi
 
 if [[ -n "${IMPORT_FILE}" && "${table_count}" -eq 0 ]]; then
   [[ "${IMPORT_FILE}" = /* ]] || IMPORT_FILE="${ROOT}/${IMPORT_FILE}"
   [[ -f "${IMPORT_FILE}" ]] || { echo "ERROR: no existe el respaldo ${IMPORT_FILE}" >&2; exit 1; }
   echo "Importando respaldo: ${IMPORT_FILE}"
-  if command -v mysql >/dev/null 2>&1; then
-    MYSQL_PWD="${DB_PASSWORD}" mysql --host="${DB_HOST}" --port="${DB_PORT}" --user="${DB_USER}" \
+  if [[ "${MYSQL_DOCKER_ACTIVO,,}" == "true" ]]; then
+    "${compose[@]}" exec -T -e "MYSQL_PWD=${DB_PASSWORD}" mysql \
+      mysql --host=127.0.0.1 --port="${DB_PORT}" --user="${DB_USER}" \
+      --default-character-set=utf8mb4 "${DB_NAME}" < "${IMPORT_FILE}"
+  elif command -v mysql >/dev/null 2>&1; then
+    MYSQL_PWD="${DB_PASSWORD}" mysql --host="${MYSQL_HOST_EXTERNO}" --port="${DB_PORT}" --user="${DB_USER}" \
       --default-character-set=utf8mb4 "${DB_NAME}" < "${IMPORT_FILE}"
   else
     docker run --rm -i --add-host=host.docker.internal:host-gateway -e "MYSQL_PWD=${DB_PASSWORD}" mysql:8.4 \

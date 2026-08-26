@@ -14,7 +14,8 @@ x-backend: &backend
     NODE_ENV: ${NODE_ENV:-production}
     BIND_HOST: 0.0.0.0
     NODE_OPTIONS: --max-old-space-size=384
-    DB_HOST: ${DB_DOCKER_HOST:-${DB_HOST:-host.docker.internal}}
+    # DB_HOST es el nombre interno esperado por las aplicaciones.
+    DB_HOST: ${MYSQL_HOST_CONTENEDORES:-mysql}
     DB_PORT: ${DB_PORT:-3306}
     DB_NAME: ${DB_NAME:?Configura DB_NAME en .env}
     DB_USER: ${DB_USER:?Configura DB_USER en .env}

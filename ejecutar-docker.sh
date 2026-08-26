@@ -56,8 +56,22 @@ else
   fi
 fi
 dns_active="$(read_env_value DNS_ACTIVO)"
+https_active="$(read_env_value HTTPS_ACTIVO)"
+mysql_docker_active="$(read_env_value MYSQL_DOCKER_ACTIVO)"
+if [[ "${mysql_docker_active,,}" == "true" ]]; then
+  [[ -f docker-compose.mysql.yml ]] || { echo "ERROR: falta docker-compose.mysql.yml" >&2; exit 1; }
+  compose+=( -f docker-compose.mysql.yml )
+  echo "INFO: MySQL se iniciara dentro de la red privada de Docker."
+else
+  echo "INFO: se utilizara MySQL externo configurado en MYSQL_HOST_EXTERNO."
+fi
 declare -a certificate_hosts=()
-if [[ "${dns_active,,}" == "true" ]]; then
+if [[ "${https_active,,}" != "true" ]]; then
+  proxy_compose_file="docker-compose.http.yml"
+  [[ -f "${proxy_compose_file}" ]] || { echo "ERROR: falta ${proxy_compose_file}" >&2; exit 1; }
+  compose+=( -f "${proxy_compose_file}" )
+  echo "INFO: modo HTTP sin certificado; se omite el proxy HTTPS."
+elif [[ "${dns_active,,}" == "true" ]]; then
   certificate_hosts+=("$(read_env_value DNS_PORTAL_HOST)")
   certificate_hosts+=("$(read_env_value DNS_ADMIN_HOST)")
   certificate_hosts+=("$(read_env_value DNS_API_HOST)")
@@ -68,11 +82,13 @@ else
   certificate_hosts+=("${public_host}")
   proxy_compose_file="docker-compose.https.yml"
 fi
-if [[ -n "${certificate_hosts[0]}" ]]; then
+if [[ "${https_active,,}" != "true" ]]; then
+  :
+elif [[ -n "${certificate_hosts[0]}" ]]; then
   [[ -f "${proxy_compose_file}" ]] || { echo "ERROR: falta ${proxy_compose_file}" >&2; exit 1; }
   bash "${ROOT}/scripts/generar-certificado-local.sh" "${certificate_hosts[@]}"
   compose+=( -f "${proxy_compose_file}" )
-  echo "INFO: proxy HTTPS para ${certificate_hosts[*]}; MySQL conserva DB_HOST del .env."
+  echo "INFO: proxy HTTPS para ${certificate_hosts[*]}; MySQL conserva su configuración del .env."
 else
   echo "ERROR: no se encontro una IP o configuracion DNS valida en .env para iniciar HTTPS." >&2
   exit 2

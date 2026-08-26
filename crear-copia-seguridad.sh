@@ -13,10 +13,11 @@ read_env() {
   printf '%s' "${value}"
 }
 
-DB_HOST="$(read_env DB_HOST)"; DB_PORT="$(read_env DB_PORT)"
+MYSQL_HOST_EXTERNO="$(read_env MYSQL_HOST_EXTERNO)"; DB_PORT="$(read_env DB_PORT)"
 DB_NAME="$(read_env DB_NAME)"; DB_USER="$(read_env DB_USER)"; DB_PASSWORD="$(read_env DB_PASSWORD)"
+MYSQL_DOCKER_ACTIVO="$(read_env MYSQL_DOCKER_ACTIVO)"
 BACKUP_NAME="$(read_env BACKUP_NAME)"; BACKUP_NAME="${BACKUP_NAME:-academia-final}"
-BACKUP_DIRECTORY="$(read_env BACKUP_DIRECTORY)"; BACKUP_DIRECTORY="${BACKUP_DIRECTORY:-database-backups}"
+BACKUP_DIRECTORY="$(read_env BACKUP_DIRECTORY)"; BACKUP_DIRECTORY="${BACKUP_DIRECTORY:-mysql/backups}"
 [[ "${BACKUP_DIRECTORY}" = /* ]] || BACKUP_DIRECTORY="${ROOT}/${BACKUP_DIRECTORY}"
 mkdir -p -- "${BACKUP_DIRECTORY}"
 
@@ -25,11 +26,17 @@ backup_path="${BACKUP_DIRECTORY}/${DB_NAME}-${timestamp}.sql"
 partial_path="${backup_path}.partial"
 trap 'rm -f -- "${partial_path}"' EXIT
 
-docker_host="${DB_HOST}"
+docker_host="${MYSQL_HOST_EXTERNO}"
 [[ "${docker_host}" == "127.0.0.1" || "${docker_host}" == "localhost" ]] && docker_host="host.docker.internal"
 echo "Creando respaldo local de ${DB_NAME}..."
-if command -v mysqldump >/dev/null 2>&1; then
-  MYSQL_PWD="${DB_PASSWORD}" mysqldump --host="${DB_HOST}" --port="${DB_PORT}" --user="${DB_USER}" \
+if [[ "${MYSQL_DOCKER_ACTIVO,,}" == "true" ]]; then
+  compose=(docker compose --env-file "${ENV_FILE}" -f "${ROOT}/docker-compose.yml" -f "${ROOT}/docker-compose.mysql.yml")
+  (( EUID == 0 )) || docker info >/dev/null 2>&1 || compose=(sudo "${compose[@]}")
+  "${compose[@]}" exec -T -e "MYSQL_PWD=${DB_PASSWORD}" mysql \
+    mysqldump --host=127.0.0.1 --port="${DB_PORT}" --user="${DB_USER}" --single-transaction \
+    --no-tablespaces --routines --triggers --events --default-character-set=utf8mb4 --databases "${DB_NAME}" > "${partial_path}"
+elif command -v mysqldump >/dev/null 2>&1; then
+  MYSQL_PWD="${DB_PASSWORD}" mysqldump --host="${MYSQL_HOST_EXTERNO}" --port="${DB_PORT}" --user="${DB_USER}" \
     --single-transaction --no-tablespaces --routines --triggers --events --default-character-set=utf8mb4 \
     --databases "${DB_NAME}" > "${partial_path}"
 elif command -v docker >/dev/null 2>&1; then

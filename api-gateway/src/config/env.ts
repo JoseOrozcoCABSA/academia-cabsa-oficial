@@ -17,6 +17,14 @@ const positiveInteger = (name: string, fallback: number): number => {
   return value;
 };
 
+const nonNegativeInteger = (name: string, fallback: number): number => {
+  const value = Number(process.env[name] ?? fallback);
+  if (!Number.isInteger(value) || value < 0) {
+    throw new Error(`${name} debe ser un entero no negativo`);
+  }
+  return value;
+};
+
 const requiredValue = (name: string, minimumLength = 1): string => {
   const value = process.env[name]?.trim();
   if (!value || value.length < minimumLength) {
@@ -74,7 +82,7 @@ const env = Object.freeze({
    * Subirlo a 1 sólo cuando haya de verdad un proxy inverso que **reescriba**
    * la cabecera; si no, se está confiando en el atacante.
    */
-  trustProxy: positiveInteger('TRUST_PROXY_HOPS', 0),
+  trustProxy: nonNegativeInteger('TRUST_PROXY_HOPS', 0),
   redisUrl: process.env.REDIS_URL?.trim() || null,
   /**
    * Cubo general por dirección de origen.

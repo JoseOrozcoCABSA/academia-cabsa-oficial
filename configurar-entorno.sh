@@ -60,7 +60,7 @@ chmod 600 "${ENV_FILE}" 2>/dev/null || true
 db_password="${DB_PASSWORD:-$(read_env DB_PASSWORD)}"
 if [[ -z "${db_password}" || "${db_password}" == CAMBIAR_* ]]; then
   if [[ -r /dev/tty ]]; then
-    printf 'Contraseña MySQL para %s@%s: ' "$(read_env DB_USER)" "$(read_env DB_HOST)" >/dev/tty
+    printf 'Contraseña MySQL para el usuario %s: ' "$(read_env DB_USER)" >/dev/tty
     IFS= read -r -s db_password </dev/tty
     printf '\n' >/dev/tty
   else
@@ -87,7 +87,58 @@ if (( EUID == 0 )) && [[ -n "${SUDO_USER:-}" && "${SUDO_USER}" != root ]]; then
   chown "${SUDO_USER}:${owner_group}" "${ENV_FILE}" 2>/dev/null || true
 fi
 
-# Solo cambia URLs publicas; las conexiones internas y DB_HOST se conservan.
+# Selecciona MySQL privado en Docker o un servidor externo.
+mysql_docker_active="${MYSQL_DOCKER_ACTIVO:-$(read_env MYSQL_DOCKER_ACTIVO)}"
+mysql_docker_active="$(printf '%s' "${mysql_docker_active}" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')"
+case "${mysql_docker_active}" in
+  true|1|yes|si|sí) mysql_docker_active="true" ;;
+  false|0|no|"") mysql_docker_active="false" ;;
+  *) echo "ERROR: MYSQL_DOCKER_ACTIVO debe ser true o false." >&2; exit 2 ;;
+esac
+set_env MYSQL_DOCKER_ACTIVO "${mysql_docker_active}"
+
+if [[ "${mysql_docker_active}" == "true" ]]; then
+  set_env MYSQL_HOST_CONTENEDORES "mysql"
+  echo "OK: MySQL privado de Docker seleccionado."
+else
+  db_host="${MYSQL_HOST_EXTERNO:-$(read_env MYSQL_HOST_EXTERNO)}"
+  [[ -n "${db_host}" ]] || {
+    echo "ERROR: define MYSQL_HOST_EXTERNO con la IP o DNS de MySQL externo." >&2
+    exit 2
+  }
+  set_env MYSQL_HOST_EXTERNO "${db_host}"
+  db_docker_host="${MYSQL_HOST_CONTENEDORES:-$(read_env MYSQL_HOST_CONTENEDORES)}"
+  if [[ -z "${db_docker_host}" || "${db_docker_host}" == "auto" || "${db_docker_host}" == "mysql" ]]; then
+  if [[ "${db_host}" =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+    db_docker_host="${db_host}"
+  elif [[ "${db_host}" == "localhost" || "${db_host}" == "127.0.0.1" ]]; then
+    db_docker_host="host.docker.internal"
+  elif command -v getent >/dev/null 2>&1; then
+    db_docker_host="$(getent ahostsv4 "${db_host}" 2>/dev/null | awk 'NR==1 {print $1}')"
+  fi
+  [[ -n "${db_docker_host}" ]] || {
+    echo "ERROR: ${db_host} funciona en Ubuntu pero no se pudo resolver para Docker." >&2
+    echo "Define MYSQL_HOST_CONTENEDORES con la IP de MySQL en .env." >&2
+    exit 2
+  }
+  set_env MYSQL_HOST_CONTENEDORES "${db_docker_host}"
+  echo "OK: MySQL para Docker: ${db_host} -> ${db_docker_host}."
+  fi
+fi
+
+# Solo cambia URLs publicas; la configuracion de MySQL se conserva.
+https_active="${HTTPS_ACTIVO:-$(read_env HTTPS_ACTIVO)}"
+https_active="$(printf '%s' "${https_active}" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')"
+case "${https_active}" in
+  true|1|yes|si|sí|"") https_active="true" ;;
+  false|0|no) https_active="false" ;;
+  *)
+    echo "ERROR: HTTPS_ACTIVO debe ser true o false (valor recibido: ${https_active})." >&2
+    exit 2
+    ;;
+esac
+set_env HTTPS_ACTIVO "${https_active}"
+
 dns_active="${DNS_ACTIVO:-$(read_env DNS_ACTIVO)}"
 dns_active="$(printf '%s' "${dns_active}" | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')"
 case "${dns_active}" in
@@ -109,14 +160,23 @@ if [[ "${dns_active}" == "true" ]]; then
     exit 2
   }
   set_env PUBLIC_DOMAIN "${portal_host}"
-  set_env DNS_CORS_ORIGINS "https://${portal_host},https://${admin_host}"
-  set_env DNS_API_PUBLIC_URL "https://${api_host}"
-  set_env DNS_PORTAL_PUBLIC_URL "https://${portal_host}"
-  set_env DNS_FRONTEND_URL "https://${portal_host}"
-  set_env CORS_ORIGINS "https://${portal_host},https://${admin_host}"
-  set_env API_PUBLIC_URL "https://${api_host}"
-  set_env PORTAL_PUBLIC_URL "https://${portal_host}"
-  set_env FRONTEND_URL "https://${portal_host}"
+  if [[ "${https_active}" == "true" ]]; then
+    portal_url="https://${portal_host}"
+    admin_url="https://${admin_host}"
+    api_url="https://${api_host}"
+  else
+    portal_url="http://${portal_host}:$(read_env PORT_FRONTEND_ACADEMIA)"
+    admin_url="http://${admin_host}:$(read_env PORT_FRONTEND_ADMIN)"
+    api_url="http://${api_host}:$(read_env PORT_GATEWAY)"
+  fi
+  set_env DNS_CORS_ORIGINS "${portal_url},${admin_url}"
+  set_env DNS_API_PUBLIC_URL "${api_url}"
+  set_env DNS_PORTAL_PUBLIC_URL "${portal_url}"
+  set_env DNS_FRONTEND_URL "${portal_url}"
+  set_env CORS_ORIGINS "${portal_url},${admin_url}"
+  set_env API_PUBLIC_URL "${api_url}"
+  set_env PORTAL_PUBLIC_URL "${portal_url}"
+  set_env FRONTEND_URL "${portal_url}"
   public_host="${portal_host}"
   echo "OK: modo DNS activo: portal=${portal_host}, admin=${admin_host}, api=${api_host}."
 else
@@ -135,12 +195,27 @@ else
   done
   set_env SERVER_IP "${server_ip}"
   public_host="${server_ip}"
-  set_env API_PUBLIC_URL "https://${server_ip}:9443"
-  set_env PORTAL_PUBLIC_URL "https://${server_ip}:6007"
-  set_env FRONTEND_URL "https://${server_ip}:6007"
-  set_env CORS_ORIGINS "https://${server_ip}:6007,https://${server_ip}:6008"
+  if [[ "${https_active}" == "true" ]]; then
+    api_url="https://${server_ip}:9443"
+    portal_url="https://${server_ip}:6007"
+    admin_url="https://${server_ip}:6008"
+  else
+    api_url="http://${server_ip}:$(read_env PORT_GATEWAY)"
+    portal_url="http://${server_ip}:$(read_env PORT_FRONTEND_ACADEMIA)"
+    admin_url="http://${server_ip}:$(read_env PORT_FRONTEND_ADMIN)"
+  fi
+  set_env API_PUBLIC_URL "${api_url}"
+  set_env PORTAL_PUBLIC_URL "${portal_url}"
+  set_env FRONTEND_URL "${portal_url}"
+  set_env CORS_ORIGINS "${portal_url},${admin_url}"
   echo "OK: modo IP activo; URLs publicas configuradas para ${server_ip}."
 fi
-set_env TRUST_PROXY_HOPS "1"
+if [[ "${https_active}" == "true" ]]; then
+  set_env TRUST_PROXY_HOPS "1"
+  echo "OK: HTTPS activo; se usara el proxy TLS y su certificado."
+else
+  set_env TRUST_PROXY_HOPS "0"
+  echo "OK: HTTPS desactivado; se publicaran los puertos HTTP sin certificado."
+fi
 chmod 600 "${ENV_FILE}" 2>/dev/null || true
 echo "OK: configuración preparada en ${ENV_FILE}."
